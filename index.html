@@ -1,13 +1,118 @@
-<!doctype html>
-<html lang="en" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#000000" />
-    <title>VIBEZZY — Your vibe. Your people. Your AIM.</title>
-  </head>
-  <body class="bg-black text-white antialiased selection:bg-[#00FF88] selection:text-black">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIBEZ AIM - Your vibe. Your people. Your AIM.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#000;color:#fff;max-width:480px;margin:0 auto;padding-bottom:80px}
+.top{position:sticky;top:0;background:#000;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #222;z-index:10}
+.logo{font-weight:900;font-size:22px;letter-spacing:1px}
+.logo span{color:#00FF88}
+.icon-btn{background:#1A1A1A;border:1px solid #2E2E35;width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer;color:#fff}
+.screen{display:none;padding:14px 16px}
+.screen.active{display:block}
+.stories{display:flex;gap:12px;overflow-x:auto;padding:10px 0}
+.story{text-align:center;min-width:62px;cursor:pointer}
+.story .ring{width:58px;height:58px;border-radius:50%;border:3px solid #00FF88;display:flex;align-items:center;justify-content:center;font-size:24px;background:#1A1A1A}
+.story p{font-size:11px;margin-top:4px;color:#ccc}
+h2{font-size:18px;margin:16px 0 10px}
+.room{background:#1A1A1A;border:1px solid #2E2E35;border-radius:16px;padding:14px;margin-bottom:12px;cursor:pointer}
+.room-top{display:flex;justify-content:space-between;align-items:center}
+.room h3{font-size:16px}
+.live{color:#00FF88;font-size:12px;font-weight:bold}
+.room p{color:#aaa;font-size:13px;margin:6px 0}
+.join{background:#00FF88;color:#000;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;width:100%;margin-top:8px}
+.card{background:#1A1A1A;border:1px solid #2E2E35;border-radius:16px;padding:14px;margin-bottom:12px}
+.btn{background:#00FF88;color:#000;border:none;padding:10px 16px;border-radius:20px;font-weight:bold;cursor:pointer}
+.btn-outline{background:transparent;color:#00FF88;border:1px solid #00FF88;padding:10px 16px;border-radius:20px;font-weight:bold;cursor:pointer}
+input,select,textarea{width:100%;background:#242429;border:1px solid #2E2E35;color:#fff;padding:12px;border-radius:12px;margin:8px 0;outline:none}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#111;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0;z-index:20}
+.nav-item{background:none;border:none;color:#888;font-size:22px;cursor:pointer;text-align:center}
+.nav-item.active{color:#00FF88}
+.nav-item span{display:block;font-size:10px}
+.create-btn{background:#00FF88;color:#000;width:52px;height:52px;border-radius:50%;font-size:28px;margin-top:-26px;border:3px solid #000}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00FF88;color:#000;padding:12px 20px;border-radius:20px;font-weight:bold;display:none;z-index:99}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal-box{background:#1A1A1A;border:1px solid #2E2E35;border-radius:16px;padding:20px;width:100%;max-width:400px;text-align:center}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="top"><div class="logo">VIBEZ <span>AIM</span></div><div><button class="icon-btn" onclick="showScreen('search')">🔍</button> <button class="icon-btn" onclick="showScreen('notif')">🔔</button></div></div>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+<div class="stories">
+<div class="story" onclick="showToast('Viewing @alexvibez story')"><div class="ring">🔥</div><p>alex</p></div>
+<div class="story" onclick="showToast('Viewing @naijaqueen story')"><div class="ring">👑</div><p>naija</p></div>
+<div class="story" onclick="showToast('Viewing @djflex story')"><div class="ring">🎧</div><p>djflex</p></div>
+<div class="story" onclick="showToast('Viewing @fashionbae story')"><div class="ring">💃</div><p>fashion</p></div>
+<div class="story" onclick="showToast('Viewing @techboy story')"><div class="ring">💻</div><p>techboy</p></div>
+</div>
+<h2>🔥 Live Rooms</h2>
+<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>⚽ FOOTBALL</h3><span class="live">● LIVE • 1.2k</span></div><p>Champions League talk + predictions</p><button class="join">Join Room →</button></div>
+<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>🎵 MUSIC</h3><span class="live">● LIVE • 890</span></div><p>Afrobeats, Amapiano, New Drops</p><button class="join">Join Room →</button></div>
+<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>🎉 PARTY TURNER</h3><span class="live">● LIVE • 2.4k</span></div><p>Party vibes all night - Host: @alexvibez</p><button class="join">Join Room →</button></div>
+<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>💄 LIFESTYLE</h3><span class="live">● LIVE • 756</span></div><p>Daily life, gist & motivation</p><button class="join">Join Room →</button></div>
+<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>💪 HEALTH TALK</h3><span class="live">● LIVE • 543</span></div><p>Fitness, food & mental health</p><button class="join">Join Room →</button></div>
+<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>👗 FASHION HUB</h3><span class="live">● LIVE • 967</span></div><p>Outfits, thrift finds & style tips</p><button class="join">Join Room →</button></div>
+<h2>📱 Feed</h2>
+<div class="card"><b>@alexvibez ✅</b><p style="margin:8px 0;color:#ddd">New party mix just dropped! 🔥 Who's ready for Friday?</p><div style="background:#242429;padding:30px;text-align:center;border-radius:12px;font-size:30px">🎧 Party Mix</div><p style="margin-top:10px"><button class="btn-outline" onclick="likeBtn(this)">❤️ <span>1.2k</span></button> <button class="btn-outline" onclick="showToast('Comments opened')">💬 234</button></p></div>
+<div class="card"><b>@naijaqueen ✅</b><p style="margin:8px 0;color:#ddd">Lagos fashion week was crazy! 👗✨</p><div style="background:#242429;padding:30px;text-align:center;border-radius:12px;font-size:30px">👗 Fashion Look</div><p style="margin-top:10px"><button class="btn-outline" onclick="likeBtn(this)">❤️ <span>856</span></button> <button class="btn-outline" onclick="showToast('Comments opened')">💬 98</button></p></div>
+</div>
+<!-- LIVE -->
+<div id="live" class="screen">
+<div class="card" style="text-align:center"><span style="background:#ff0000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold">● LIVE</span><h2 style="margin-top:10px">🎉 PARTY TURNER</h2><p>1,187 listening • Host: @alexvibez</p><div style="font-size:50px;margin:14px 0">🎤</div><p><b>@alexvibez</b> speaking...</p><p style="color:#aaa;font-size:13px">Co-hosts: @djflex • @naijaqueen</p></div>
+<div class="card"><h3>💬 Live Chat</h3><div id="chatBox" style="background:#242429;border-radius:12px;padding:10px;margin:10px 0;max-height:120px;overflow-y:auto"><p><b>@djflex:</b> This party is 🔥🔥</p><p><b>@naijaqueen:</b> Play Amapiano next!</p><p><b>@techboy:</b> Best room on VIBEZ AIM</p></div><input id="chatInput" placeholder="Type a message..."><button class="btn" style="width:100%" onclick="sendChat()">Send Message</button></div>
+<div class="card"><h3>🎁 Send Gift - Balance: <span id="bal1">1247</span> AMI</h3><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-outline" style="flex:1" onclick="sendGift('Fire 🔥',50)">🔥<br>50 AMI</button><button class="btn-outline" style="flex:1" onclick="sendGift('Crown 👑',100)">👑<br>100 AMI</button><button class="btn-outline" style="flex:1" onclick="sendGift('Mic 🎤',30)">🎤<br>30 AMI</button><button class="btn-outline" style="flex:1" onclick="sendGift('Star ⭐',20)">⭐<br>20 AMI</button></div></div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="screen">
+<div class="card" style="text-align:center"><div style="font-size:70px">😎</div><h2>@vibezAim ✅</h2><p style="color:#aaa">Creating vibes • Tech • Music</p><p style="margin:10px 0"><b>12.4K</b> Followers • <b>980</b> Following • <b>1.2M</b> Views</p><div style="background:#242429;padding:12px;border-radius:12px">💰 AMI Balance: <b style="color:#00FF88"><span id="bal2">1247</span> AMI</b><br><button class="btn" style="margin-top:8px" onclick="showScreen('wallet')">Top Up +</button></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn" style="flex:1" onclick="showToast('Profile editing opened')">Edit Profile</button><button class="btn-outline" style="flex:1" onclick="showToast('Link copied! Share your profile')">Share</button></div></div>
+<h2>🎬 My Videos</h2><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 1 - 30 sec')">▶️<br><small>Video 1<br>30 sec</small></div><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 2 - 30 sec')">▶️<br><small>Video 2<br>30 sec</small></div><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 3 - 30 sec')">▶️<br><small>Video 3<br>30 sec</small></div><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 4 - 30 sec')">▶️<br><small>Video 4<br>30 sec</small></div><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 5 - 30 sec')">▶️<br><small>Video 5<br>30 sec</small></div></div>
+</div>
+
+<!-- SEARCH -->
+<div id="search" class="screen"><h2>🔍 Search</h2><input id="searchInput" placeholder="Search rooms, people..." oninput="doSearch(this.value)"><div id="searchResults"><div class="card" onclick="showScreen('live')">⚽ FOOTBALL - 1.2k online</div><div class="card" onclick="showScreen('live')">🎵 MUSIC - 890 online</div><div class="card" onclick="showScreen('profile')">😎 @vibezAim - 12.4K followers</div></div></div>
+
+<!-- NOTIFICATIONS -->
+<div id="notif" class="screen"><h2>🔔 Notifications</h2><div class="card">❤️ @djflex liked your post</div><div class="card">👥 @naijaqueen started following you</div><div class="card">🎁 You received 50 AMI from @alexvibez</div><div class="card">🎉 PARTY TURNER is live now!</div></div>
+<!-- GROUPS -->
+<div id="groups" class="screen"><h2>👥 Groups</h2><div class="card"><h3>Create New Group</h3><input id="groupName" placeholder="Group name e.g. Lagos Party Crew"><textarea id="groupDesc" placeholder="Description..."></textarea><select id="groupType"><option>Public - Anyone can join</option><option>Private - Invite only</option><option>Secret - Hidden</option></select><button class="btn" style="width:100%" onclick="createGroup()">Create Group</button></div><div id="myGroups"><div class="card" onclick="showToast('Opening Lagos Party Crew chat')">🎉 Lagos Party Crew • 234/500 members<br><small>Tap to open chat</small></div><div class="card" onclick="showToast('Opening Football Fans chat')">⚽ Football Fans NG • 189/500 members<br><small>Tap to open chat</small></div></div></div>
+
+<!-- WALLET -->
+<div id="wallet" class="screen"><div class="card" style="text-align:center"><p>💰 AMI WALLET</p><h2 style="font-size:32px;color:#00FF88"><span id="bal3">1247</span> AMI</h2><p>= $124.70</p><button class="btn" style="margin-top:10px" onclick="showToast('Withdraw request sent! You will receive it in 24h')">Withdraw</button></div><h2>Buy AMI</h2><div class="card">200 AMI = $20 <button class="btn" style="float:right" onclick="buyAMI(200)">Buy</button></div><div class="card">500 AMI = $48 <button class="btn" style="float:right" onclick="buyAMI(500)">Buy</button></div><div class="card">1000 AMI = $90 <button class="btn" style="float:right" onclick="buyAMI(1000)">Buy</button></div><h2>History</h2><div class="card">+ 200 AMI - Bought package</div><div class="card">- 100 AMI - Sent Crown gift</div><div class="card">+ 50 AMI - Received gift</div></div>
+
+<!-- CREATE -->
+<div id="create" class="screen"><h2>➕ Create Post</h2><div class="card"><input id="postCaption" placeholder="Write a caption..."><p style="color:#aaa;font-size:13px">📹 Video: max 30 sec</p><button class="btn-outline" style="width:100%;margin-bottom:10px" onclick="showToast('Video picker opened - choose a 30 sec video')">📹 Upload Video</button><button class="btn" style="width:100%" onclick="createPost()">Post to Home</button></div><div class="card"><h3>🎙️ Go Live Audio</h3><p style="color:#aaa;font-size:13px">You need 500 followers to host. You have 12.4K followers ✅</p><button class="btn" style="width:100%;margin-top:10px" onclick="showScreen('live');showToast('You are LIVE now!')">Start Live Room</button></div></div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom">
+<button class="nav-item active" id="nav-home" onclick="showScreen('home')">🏠<span>Home</span></button>
+<button class="nav-item" id="nav-groups" onclick="showScreen('groups')">👥<span>Groups</span></button>
+<button class="create-btn" onclick="showScreen('create')">+</button>
+<button class="nav-item" id="nav-wallet" onclick="showScreen('wallet')">💰<span>Wallet</span></button>
+<button class="nav-item" id="nav-profile" onclick="showScreen('profile')">👤<span>Profile</span></button>
+</div>
+
+<div class="modal" id="modal"><div class="modal-box"><h3 id="modalText">Done!</h3><button class="btn" style="margin-top:14px" onclick="closeModal()">OK</button></div></div>
+
+<script>
+let balance=1247;
+function updateBal(){document.getElementById('bal1').textContent=balance;document.getElementById('bal2').textContent=balance;document.getElementById('bal3').textContent=balance;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));let nav=document.getElementById('nav-'+id);if(nav)nav.classList.add('active');window.scrollTo(0,0);}
+function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
+function closeModal(){document.getElementById('modal').style.display='none';}
+function likeBtn(btn){let s=btn.querySelector('span');let n=parseFloat(s.textContent);s.textContent=(n+0.1).toFixed(1)+'k';showToast('You liked this post ❤️');}
+function sendChat(){let inp=document.getElementById('chatInput');if(!inp.value)return;let box=document.getElementById('chatBox');box.innerHTML+='<p><b>You:</b> '+inp.value+'</p>';inp.value='';box.scrollTop=box.scrollHeight;}
+function sendGift(name,cost){if(balance<cost){showToast('Not enough AMI! Top up wallet');return;}balance-=cost;updateBal();showToast('You sent '+name+'! 🎁');}
+function buyAMI(amt){balance+=amt;updateBal();showToast('You bought '+amt+' AMI ✅');}
+function createGroup(){let n=document.getElementById('groupName').value;if(!n){showToast('Type a group name first');return;}document.getElementById('myGroups').innerHTML+='<div class="card" onclick="showToast(\'Opening '+n+' chat\')">👥 '+n+' • 1/500 members<br><small>Tap to open chat</small></div>';showToast('Group '+n+' created! 🎉');}
+function createPost(){let c=document.getElementById('postCaption').value||'New vibe post!';showToast('Posted to Home ✅');showScreen('home');}
+function doSearch(v){let r=document.getElementById('searchResults');if(!v){r.innerHTML='<div class="card" onclick="showScreen(\'live\')">⚽ FOOTBALL - 1.2k online</div>';return;}r.innerHTML='<div class="card">🔍 Results for "'+v+'"</div><div class="card" onclick="showScreen(\'live\')">🎉 PARTY TURNER - 2.4k online</div>';}
+</script>
+</body>
 </html>
