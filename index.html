@@ -1,118 +1,1674 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIBEZ AIM - Your vibe. Your people. Your AIM.</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#000;color:#fff;max-width:480px;margin:0 auto;padding-bottom:80px}
-.top{position:sticky;top:0;background:#000;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #222;z-index:10}
-.logo{font-weight:900;font-size:22px;letter-spacing:1px}
-.logo span{color:#00FF88}
-.icon-btn{background:#1A1A1A;border:1px solid #2E2E35;width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer;color:#fff}
-.screen{display:none;padding:14px 16px}
-.screen.active{display:block}
-.stories{display:flex;gap:12px;overflow-x:auto;padding:10px 0}
-.story{text-align:center;min-width:62px;cursor:pointer}
-.story .ring{width:58px;height:58px;border-radius:50%;border:3px solid #00FF88;display:flex;align-items:center;justify-content:center;font-size:24px;background:#1A1A1A}
-.story p{font-size:11px;margin-top:4px;color:#ccc}
-h2{font-size:18px;margin:16px 0 10px}
-.room{background:#1A1A1A;border:1px solid #2E2E35;border-radius:16px;padding:14px;margin-bottom:12px;cursor:pointer}
-.room-top{display:flex;justify-content:space-between;align-items:center}
-.room h3{font-size:16px}
-.live{color:#00FF88;font-size:12px;font-weight:bold}
-.room p{color:#aaa;font-size:13px;margin:6px 0}
-.join{background:#00FF88;color:#000;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;width:100%;margin-top:8px}
-.card{background:#1A1A1A;border:1px solid #2E2E35;border-radius:16px;padding:14px;margin-bottom:12px}
-.btn{background:#00FF88;color:#000;border:none;padding:10px 16px;border-radius:20px;font-weight:bold;cursor:pointer}
-.btn-outline{background:transparent;color:#00FF88;border:1px solid #00FF88;padding:10px 16px;border-radius:20px;font-weight:bold;cursor:pointer}
-input,select,textarea{width:100%;background:#242429;border:1px solid #2E2E35;color:#fff;padding:12px;border-radius:12px;margin:8px 0;outline:none}
-.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#111;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0;z-index:20}
-.nav-item{background:none;border:none;color:#888;font-size:22px;cursor:pointer;text-align:center}
-.nav-item.active{color:#00FF88}
-.nav-item span{display:block;font-size:10px}
-.create-btn{background:#00FF88;color:#000;width:52px;height:52px;border-radius:50%;font-size:28px;margin-top:-26px;border:3px solid #000}
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00FF88;color:#000;padding:12px 20px;border-radius:20px;font-weight:bold;display:none;z-index:99}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
-.modal-box{background:#1A1A1A;border:1px solid #2E2E35;border-radius:16px;padding:20px;width:100%;max-width:400px;text-align:center}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>VIBEZZY — Your vibe. Your people. Your AIM.</title>
+
+  <!-- PWA & Home Screen App Meta -->
+  <meta name="theme-color" content="#000000" />
+  <meta name="background-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="VIBEZZY" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="VIBEZZY" />
+
+  <!-- Placeholder Icon & Manifest Links (populated dynamically with 512x512 PNG logo below) -->
+  <link id="favicon-link" rel="icon" type="image/png" href="" />
+  <link id="apple-icon-link" rel="apple-touch-icon" sizes="180x180" href="" />
+  <link id="manifest-link" rel="manifest" href="" />
+
+  <!-- Tailwind CSS + React 18 + Babel -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: "#00FF88",
+            card: "#1A1A1D",
+          },
+        },
+      },
+    };
+  </script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    html, body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      overscroll-behavior-y: contain;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.6); }
+      70% { box-shadow: 0 0 0 12px rgba(0, 255, 136, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+    }
+    .speaking-ring { animation: pulseRing 1.5s infinite; }
+  </style>
+
+  <!-- Generate 512x512 & 192x192 PNG App Logo + PWA Manifest + Service Worker -->
+  <script>
+    (function setupVibezzyAppIconAndPWA() {
+      function drawLogoPng(size) {
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+
+        // Black rounded-square app icon background
+        const r = size * 0.22;
+        ctx.fillStyle = "#060807";
+        ctx.beginPath();
+        ctx.moveTo(r, 0);
+        ctx.lineTo(size - r, 0);
+        ctx.quadraticCurveTo(size, 0, size, r);
+        ctx.lineTo(size, size - r);
+        ctx.quadraticCurveTo(size, size, size - r, size);
+        ctx.lineTo(r, size);
+        ctx.quadraticCurveTo(0, size, 0, size - r);
+        ctx.lineTo(0, r);
+        ctx.quadraticCurveTo(0, 0, r, 0);
+        ctx.closePath();
+        ctx.fill();
+
+        // Subtle radial neon glow
+        const grad = ctx.createRadialGradient(size * 0.5, size * 0.45, size * 0.05, size * 0.5, size * 0.5, size * 0.55);
+        grad.addColorStop(0, "rgba(0, 255, 136, 0.35)");
+        grad.addColorStop(1, "rgba(0, 255, 136, 0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, size, size);
+
+        // Neon border ring
+        ctx.strokeStyle = "#00FF88";
+        ctx.lineWidth = size * 0.03;
+        ctx.beginPath();
+        ctx.arc(size * 0.5, size * 0.5, size * 0.39, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Bold "V" Vibe Emblem
+        ctx.strokeStyle = "#00FF88";
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.lineWidth = size * 0.11;
+        ctx.beginPath();
+        ctx.moveTo(size * 0.29, size * 0.32);
+        ctx.lineTo(size * 0.50, size * 0.72);
+        ctx.lineTo(size * 0.71, size * 0.32);
+        ctx.stroke();
+
+        // White audio pulse dot inside V
+        ctx.fillStyle = "#FFFFFF";
+        ctx.beginPath();
+        ctx.arc(size * 0.50, size * 0.32, size * 0.055, 0, Math.PI * 2);
+        ctx.fill();
+
+        return canvas.toDataURL("image/png");
+      }
+
+      try {
+        const icon512 = drawLogoPng(512);
+        const icon192 = drawLogoPng(192);
+        const icon180 = drawLogoPng(180);
+
+        document.getElementById("favicon-link").href = icon192;
+        document.getElementById("apple-icon-link").href = icon180;
+        window.VIBEZZY_ICON_URL = icon192;
+
+        const manifest = {
+          name: "VIBEZZY",
+          short_name: "VIBEZZY",
+          description: "Your vibe. Your people. Your AIM.",
+          start_url: window.location.href,
+          display: "standalone",
+          orientation: "portrait",
+          background_color: "#000000",
+          theme_color: "#00FF88",
+          icons: [
+            { src: icon192, sizes: "192x192", type: "image/png", purpose: "any maskable" },
+            { src: icon512, sizes: "512x512", type: "image/png", purpose: "any maskable" },
+          ],
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+        document.getElementById("manifest-link").href = URL.createObjectURL(manifestBlob);
+
+        // Register inline Service Worker when on https:// or localhost
+        if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+          const swCode = `
+            self.addEventListener('install', e => self.skipWaiting());
+            self.addEventListener('activate', e => self.clients.claim());
+            self.addEventListener('fetch', e => {});
+          `;
+          const swBlob = new Blob([swCode], { type: "application/javascript" });
+          navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
-<body>
-<div class="toast" id="toast"></div>
-<div class="top"><div class="logo">VIBEZ <span>AIM</span></div><div><button class="icon-btn" onclick="showScreen('search')">🔍</button> <button class="icon-btn" onclick="showScreen('notif')">🔔</button></div></div>
+<body class="bg-black text-white">
+  <div id="root"></div>
 
-<!-- HOME -->
-<div id="home" class="screen active">
-<div class="stories">
-<div class="story" onclick="showToast('Viewing @alexvibez story')"><div class="ring">🔥</div><p>alex</p></div>
-<div class="story" onclick="showToast('Viewing @naijaqueen story')"><div class="ring">👑</div><p>naija</p></div>
-<div class="story" onclick="showToast('Viewing @djflex story')"><div class="ring">🎧</div><p>djflex</p></div>
-<div class="story" onclick="showToast('Viewing @fashionbae story')"><div class="ring">💃</div><p>fashion</p></div>
-<div class="story" onclick="showToast('Viewing @techboy story')"><div class="ring">💻</div><p>techboy</p></div>
-</div>
-<h2>🔥 Live Rooms</h2>
-<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>⚽ FOOTBALL</h3><span class="live">● LIVE • 1.2k</span></div><p>Champions League talk + predictions</p><button class="join">Join Room →</button></div>
-<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>🎵 MUSIC</h3><span class="live">● LIVE • 890</span></div><p>Afrobeats, Amapiano, New Drops</p><button class="join">Join Room →</button></div>
-<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>🎉 PARTY TURNER</h3><span class="live">● LIVE • 2.4k</span></div><p>Party vibes all night - Host: @alexvibez</p><button class="join">Join Room →</button></div>
-<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>💄 LIFESTYLE</h3><span class="live">● LIVE • 756</span></div><p>Daily life, gist & motivation</p><button class="join">Join Room →</button></div>
-<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>💪 HEALTH TALK</h3><span class="live">● LIVE • 543</span></div><p>Fitness, food & mental health</p><button class="join">Join Room →</button></div>
-<div class="room" onclick="showScreen('live')"><div class="room-top"><h3>👗 FASHION HUB</h3><span class="live">● LIVE • 967</span></div><p>Outfits, thrift finds & style tips</p><button class="join">Join Room →</button></div>
-<h2>📱 Feed</h2>
-<div class="card"><b>@alexvibez ✅</b><p style="margin:8px 0;color:#ddd">New party mix just dropped! 🔥 Who's ready for Friday?</p><div style="background:#242429;padding:30px;text-align:center;border-radius:12px;font-size:30px">🎧 Party Mix</div><p style="margin-top:10px"><button class="btn-outline" onclick="likeBtn(this)">❤️ <span>1.2k</span></button> <button class="btn-outline" onclick="showToast('Comments opened')">💬 234</button></p></div>
-<div class="card"><b>@naijaqueen ✅</b><p style="margin:8px 0;color:#ddd">Lagos fashion week was crazy! 👗✨</p><div style="background:#242429;padding:30px;text-align:center;border-radius:12px;font-size:30px">👗 Fashion Look</div><p style="margin-top:10px"><button class="btn-outline" onclick="likeBtn(this)">❤️ <span>856</span></button> <button class="btn-outline" onclick="showToast('Comments opened')">💬 98</button></p></div>
-</div>
-<!-- LIVE -->
-<div id="live" class="screen">
-<div class="card" style="text-align:center"><span style="background:#ff0000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold">● LIVE</span><h2 style="margin-top:10px">🎉 PARTY TURNER</h2><p>1,187 listening • Host: @alexvibez</p><div style="font-size:50px;margin:14px 0">🎤</div><p><b>@alexvibez</b> speaking...</p><p style="color:#aaa;font-size:13px">Co-hosts: @djflex • @naijaqueen</p></div>
-<div class="card"><h3>💬 Live Chat</h3><div id="chatBox" style="background:#242429;border-radius:12px;padding:10px;margin:10px 0;max-height:120px;overflow-y:auto"><p><b>@djflex:</b> This party is 🔥🔥</p><p><b>@naijaqueen:</b> Play Amapiano next!</p><p><b>@techboy:</b> Best room on VIBEZ AIM</p></div><input id="chatInput" placeholder="Type a message..."><button class="btn" style="width:100%" onclick="sendChat()">Send Message</button></div>
-<div class="card"><h3>🎁 Send Gift - Balance: <span id="bal1">1247</span> AMI</h3><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-outline" style="flex:1" onclick="sendGift('Fire 🔥',50)">🔥<br>50 AMI</button><button class="btn-outline" style="flex:1" onclick="sendGift('Crown 👑',100)">👑<br>100 AMI</button><button class="btn-outline" style="flex:1" onclick="sendGift('Mic 🎤',30)">🎤<br>30 AMI</button><button class="btn-outline" style="flex:1" onclick="sendGift('Star ⭐',20)">⭐<br>20 AMI</button></div></div>
-</div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-<!-- PROFILE -->
-<div id="profile" class="screen">
-<div class="card" style="text-align:center"><div style="font-size:70px">😎</div><h2>@vibezAim ✅</h2><p style="color:#aaa">Creating vibes • Tech • Music</p><p style="margin:10px 0"><b>12.4K</b> Followers • <b>980</b> Following • <b>1.2M</b> Views</p><div style="background:#242429;padding:12px;border-radius:12px">💰 AMI Balance: <b style="color:#00FF88"><span id="bal2">1247</span> AMI</b><br><button class="btn" style="margin-top:8px" onclick="showScreen('wallet')">Top Up +</button></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn" style="flex:1" onclick="showToast('Profile editing opened')">Edit Profile</button><button class="btn-outline" style="flex:1" onclick="showToast('Link copied! Share your profile')">Share</button></div></div>
-<h2>🎬 My Videos</h2><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 1 - 30 sec')">▶️<br><small>Video 1<br>30 sec</small></div><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 2 - 30 sec')">▶️<br><small>Video 2<br>30 sec</small></div><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 3 - 30 sec')">▶️<br><small>Video 3<br>30 sec</small></div><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 4 - 30 sec')">▶️<br><small>Video 4<br>30 sec</small></div><div class="card" style="text-align:center;padding:20px 5px" onclick="showToast('Playing video 5 - 30 sec')">▶️<br><small>Video 5<br>30 sec</small></div></div>
-</div>
+    /* ---------------- DEMO DATA ---------------- */
+    const DEMO_USERS = [
+      { id: "u1", name: "Tunde Adeyemi", handle: "@tunde_vibez", avatar: "🎧", city: "Lagos", verified: true, online: true },
+      { id: "u2", name: "Chidinma Okafor", handle: "@chidinma_o", avatar: "🎤", city: "Enugu", verified: true, online: true },
+      { id: "u3", name: "Ibrahim Musa", handle: "@ibrahim_k", avatar: "⚽", city: "Kano", verified: true, online: true },
+      { id: "u4", name: "Amaka Nwosu", handle: "@amaka_drip", avatar: "👗", city: "Abuja", verified: true, online: true },
+      { id: "u5", name: "Femi Balogun", handle: "@femi_playz", avatar: "🎮", city: "Ibadan", verified: true, online: true },
+      { id: "u6", name: "Zainab Bello", handle: "@zainab_fit", avatar: "🥗", city: "Abuja", verified: false, online: false },
+      { id: "u7", name: "Emeka Eze", handle: "@emeka_plug", avatar: "🔥", city: "Port Harcourt", verified: true, online: true },
+      { id: "u8", name: "Kemi Adebayo", handle: "@kemi_spark", avatar: "✨", city: "Lagos", verified: false, online: true },
+    ];
 
-<!-- SEARCH -->
-<div id="search" class="screen"><h2>🔍 Search</h2><input id="searchInput" placeholder="Search rooms, people..." oninput="doSearch(this.value)"><div id="searchResults"><div class="card" onclick="showScreen('live')">⚽ FOOTBALL - 1.2k online</div><div class="card" onclick="showScreen('live')">🎵 MUSIC - 890 online</div><div class="card" onclick="showScreen('profile')">😎 @vibezAim - 12.4K followers</div></div></div>
+    const INITIAL_STORIES = [
+      { id: "s1", handle: "@tunde_vibez", avatar: "🎧", roomId: "party_turner", roomName: "PARTY TURNER", headline: "Lagos Midnight Amapiano Set", body: "Live decks warming up right now. Drop in!", timeAgo: "12m", viewed: false },
+      { id: "s2", handle: "@femi_playz", avatar: "🎮", roomId: "game", roomName: "GAME", headline: "500 AIM CODM Scrim Tonight", body: "Squad slots filling fast in GAME room!", timeAgo: "25m", viewed: false },
+      { id: "s3", handle: "@ibrahim_k", avatar: "⚽", roomId: "football", roomName: "FOOTBALL", headline: "Osimhen & Lookman Watch", body: "Matchday reactions live right now.", timeAgo: "40m", viewed: false },
+      { id: "s4", handle: "@chidinma_o", avatar: "🎤", roomId: "music", roomName: "MUSIC", headline: "30s Studio Hook Breakdown", body: "Rate my new chorus 1-10 in Music room!", timeAgo: "1h", viewed: false },
+      { id: "s5", handle: "@amaka_drip", avatar: "👗", roomId: "fashion", roomName: "FASHION", headline: "Alté Cargo & Neon Fits", body: "Fit check live tonight in Fashion Hub.", timeAgo: "2h", viewed: false },
+      { id: "s6", handle: "@zainab_fit", avatar: "🥗", roomId: "health", roomName: "HEALTH TALK", headline: "Hydration & Sleep Reset", body: "Morning wellness routine clip is live.", timeAgo: "3h", viewed: false },
+    ];
 
-<!-- NOTIFICATIONS -->
-<div id="notif" class="screen"><h2>🔔 Notifications</h2><div class="card">❤️ @djflex liked your post</div><div class="card">👥 @naijaqueen started following you</div><div class="card">🎁 You received 50 AMI from @alexvibez</div><div class="card">🎉 PARTY TURNER is live now!</div></div>
-<!-- GROUPS -->
-<div id="groups" class="screen"><h2>👥 Groups</h2><div class="card"><h3>Create New Group</h3><input id="groupName" placeholder="Group name e.g. Lagos Party Crew"><textarea id="groupDesc" placeholder="Description..."></textarea><select id="groupType"><option>Public - Anyone can join</option><option>Private - Invite only</option><option>Secret - Hidden</option></select><button class="btn" style="width:100%" onclick="createGroup()">Create Group</button></div><div id="myGroups"><div class="card" onclick="showToast('Opening Lagos Party Crew chat')">🎉 Lagos Party Crew • 234/500 members<br><small>Tap to open chat</small></div><div class="card" onclick="showToast('Opening Football Fans chat')">⚽ Football Fans NG • 189/500 members<br><small>Tap to open chat</small></div></div></div>
+    const LIVE_ROOMS = [
+      {
+        id: "party_turner", name: "PARTY TURNER", emoji: "🎉", listeners: 2418, display: "2.4k",
+        topic: "Friday Amapiano & Afrobeats Turn-Up",
+        host: { handle: "@tunde_vibez", avatar: "🎧" },
+        coHosts: [{ handle: "@emeka_plug", avatar: "🔥" }, { handle: "@kemi_spark", avatar: "✨" }],
+        initialChat: [
+          { id: "lc1", handle: "@emeka_plug", avatar: "🔥", text: "DJ Tunde never misses with the log drum!", isGift: false },
+          { id: "lc2", handle: "@kemi_spark", avatar: "✨", text: "Lagos inside the building tonight 🇳🇬", isGift: false },
+        ],
+      },
+      {
+        id: "game", name: "GAME", emoji: "🎮", listeners: 1840, display: "1.8k",
+        topic: "CODM Ranked, EA FC 25 & 500 AIM Tourney",
+        host: { handle: "@femi_playz", avatar: "🎮" },
+        coHosts: [{ handle: "@tunde_vibez", avatar: "🎧" }, { handle: "@ibrahim_k", avatar: "⚽" }],
+        initialChat: [
+          { id: "lc3", handle: "@femi_playz", avatar: "🎮", text: "Drop your CODM UID for Round 2!", isGift: false },
+        ],
+      },
+      {
+        id: "football", name: "FOOTBALL", emoji: "⚽", listeners: 1240, display: "1.2k",
+        topic: "Super Eagles, EPL Title Race & Banter",
+        host: { handle: "@ibrahim_k", avatar: "⚽" },
+        coHosts: [{ handle: "@emeka_plug", avatar: "🔥" }, { handle: "@femi_playz", avatar: "🎮" }],
+        initialChat: [
+          { id: "lc4", handle: "@ibrahim_k", avatar: "⚽", text: "Who takes the 3 points this weekend?", isGift: false },
+        ],
+      },
+      {
+        id: "music", name: "MUSIC", emoji: "🎵", listeners: 890, display: "890",
+        topic: "Open Mic Freestyles & Beat Critique",
+        host: { handle: "@chidinma_o", avatar: "🎤" },
+        coHosts: [{ handle: "@tunde_vibez", avatar: "🎧" }, { handle: "@kemi_spark", avatar: "✨" }],
+        initialChat: [
+          { id: "lc5", handle: "@chidinma_o", avatar: "🎤", text: "Raise hand for the next 30s freestyle!", isGift: false },
+        ],
+      },
+      {
+        id: "fashion", name: "FASHION", emoji: "👗", listeners: 967, display: "967",
+        topic: "Lagos Streetwear, Thrifts & Sneaker Drops",
+        host: { handle: "@amaka_drip", avatar: "👗" },
+        coHosts: [{ handle: "@kemi_spark", avatar: "✨" }, { handle: "@chidinma_o", avatar: "🎤" }],
+        initialChat: [
+          { id: "lc6", handle: "@amaka_drip", avatar: "👗", text: "Black + Neon Green fits are undefeated.", isGift: false },
+        ],
+      },
+      {
+        id: "lifestyle", name: "LIFESTYLE", emoji: "🌴", listeners: 756, display: "756",
+        topic: "Remote Tech Money, Cars & Nightlife",
+        host: { handle: "@emeka_plug", avatar: "🔥" },
+        coHosts: [{ handle: "@amaka_drip", avatar: "👗" }, { handle: "@zainab_fit", avatar: "🥗" }],
+        initialChat: [
+          { id: "lc7", handle: "@emeka_plug", avatar: "🔥", text: "Best suya spot in VI right now?", isGift: false },
+        ],
+      },
+      {
+        id: "health", name: "HEALTH TALK", emoji: "💪", listeners: 543, display: "543",
+        topic: "Gym Splits, Clean Naija Meals & Reset",
+        host: { handle: "@zainab_fit", avatar: "🥗" },
+        coHosts: [{ handle: "@ibrahim_k", avatar: "⚽" }, { handle: "@chidinma_o", avatar: "🎤" }],
+        initialChat: [
+          { id: "lc8", handle: "@zainab_fit", avatar: "🥗", text: "Hydrate before anything else today!", isGift: false },
+        ],
+      },
+    ];
 
-<!-- WALLET -->
-<div id="wallet" class="screen"><div class="card" style="text-align:center"><p>💰 AMI WALLET</p><h2 style="font-size:32px;color:#00FF88"><span id="bal3">1247</span> AMI</h2><p>= $124.70</p><button class="btn" style="margin-top:10px" onclick="showToast('Withdraw request sent! You will receive it in 24h')">Withdraw</button></div><h2>Buy AMI</h2><div class="card">200 AMI = $20 <button class="btn" style="float:right" onclick="buyAMI(200)">Buy</button></div><div class="card">500 AMI = $48 <button class="btn" style="float:right" onclick="buyAMI(500)">Buy</button></div><div class="card">1000 AMI = $90 <button class="btn" style="float:right" onclick="buyAMI(1000)">Buy</button></div><h2>History</h2><div class="card">+ 200 AMI - Bought package</div><div class="card">- 100 AMI - Sent Crown gift</div><div class="card">+ 50 AMI - Received gift</div></div>
+    const INITIAL_POSTS = [
+      {
+        id: "p1", roomId: "party_turner", roomName: "PARTY TURNER",
+        authorName: "Tunde Adeyemi", authorHandle: "@tunde_vibez", authorAvatar: "🎧", verified: true,
+        mediaType: "video", durationSec: 30,
+        caption: "When the Amapiano log drum hits at 1AM in Lekki 🔥💚",
+        gradient: "from-emerald-950 via-zinc-900 to-black",
+        views: 48200, likes: 3420, liked: false, timeAgo: "14m ago",
+        comments: [
+          { id: "c1", handle: "@emeka_plug", avatar: "🔥", text: "Replay button broken already!" },
+          { id: "c2", handle: "@kemi_spark", avatar: "✨", text: "Pure heat DJ Tunde!" },
+        ],
+      },
+      {
+        id: "p2", roomId: "game", roomName: "GAME",
+        authorName: "Femi Balogun", authorHandle: "@femi_playz", authorAvatar: "🎮", verified: true,
+        mediaType: "video", durationSec: 28,
+        caption: "1v4 clutch in Search & Destroy final round! Squad screamed on mic 😂🎯",
+        gradient: "from-cyan-950 via-zinc-900 to-black",
+        views: 31900, likes: 2150, liked: false, timeAgo: "32m ago",
+        comments: [{ id: "c3", handle: "@ibrahim_k", avatar: "⚽", text: "That quickscope was crazy 💀" }],
+      },
+      {
+        id: "p3", roomId: "football", roomName: "FOOTBALL",
+        authorName: "Ibrahim Musa", authorHandle: "@ibrahim_k", authorAvatar: "⚽", verified: true,
+        mediaType: "photo", durationSec: 0,
+        caption: "Matchday jersey locked in. Predict tonight's scoreline! 🇳🇬⚽",
+        gradient: "from-green-950 via-zinc-900 to-black",
+        views: 19400, likes: 1290, liked: true, timeAgo: "1h ago",
+        comments: [{ id: "c4", handle: "@tunde_vibez", avatar: "🎧", text: "3-1 easy win!" }],
+      },
+      {
+        id: "p4", roomId: "music", roomName: "MUSIC",
+        authorName: "Chidinma Okafor", authorHandle: "@chidinma_o", authorAvatar: "🎤", verified: true,
+        mediaType: "video", durationSec: 30,
+        caption: "30-second Afro-soul hook from tonight's live session 💚🎶",
+        gradient: "from-purple-950 via-zinc-900 to-black",
+        views: 26700, likes: 2810, liked: false, timeAgo: "2h ago",
+        comments: [],
+      },
+      {
+        id: "p5", roomId: "fashion", roomName: "FASHION",
+        authorName: "Amaka Nwosu", authorHandle: "@amaka_drip", authorAvatar: "👗", verified: true,
+        mediaType: "photo", durationSec: 0,
+        caption: "Neon green + matte black fit check straight out of Victoria Island 🖤💚",
+        gradient: "from-lime-950 via-zinc-900 to-black",
+        views: 15800, likes: 1740, liked: false, timeAgo: "3h ago",
+        comments: [],
+      },
+    ];
 
-<!-- CREATE -->
-<div id="create" class="screen"><h2>➕ Create Post</h2><div class="card"><input id="postCaption" placeholder="Write a caption..."><p style="color:#aaa;font-size:13px">📹 Video: max 30 sec</p><button class="btn-outline" style="width:100%;margin-bottom:10px" onclick="showToast('Video picker opened - choose a 30 sec video')">📹 Upload Video</button><button class="btn" style="width:100%" onclick="createPost()">Post to Home</button></div><div class="card"><h3>🎙️ Go Live Audio</h3><p style="color:#aaa;font-size:13px">You need 500 followers to host. You have 12.4K followers ✅</p><button class="btn" style="width:100%;margin-top:10px" onclick="showScreen('live');showToast('You are LIVE now!')">Start Live Room</button></div></div>
+    const INITIAL_TOURNAMENTS = [
+      { id: "t1", title: "Naija CODM Trio Cup", game: "Call of Duty Mobile", prizeAmi: 1500, players: 42, maxPlayers: 64, startsIn: "Tonight 9:00 PM WAT", joined: false },
+      { id: "t2", title: "EA FC 25 Lagos Knockout", game: "EA Sports FC 25", prizeAmi: 2000, players: 28, maxPlayers: 32, startsIn: "Tomorrow 7:00 PM WAT", joined: true },
+    ];
 
-<!-- BOTTOM NAV -->
-<div class="bottom">
-<button class="nav-item active" id="nav-home" onclick="showScreen('home')">🏠<span>Home</span></button>
-<button class="nav-item" id="nav-groups" onclick="showScreen('groups')">👥<span>Groups</span></button>
-<button class="create-btn" onclick="showScreen('create')">+</button>
-<button class="nav-item" id="nav-wallet" onclick="showScreen('wallet')">💰<span>Wallet</span></button>
-<button class="nav-item" id="nav-profile" onclick="showScreen('profile')">👤<span>Profile</span></button>
-</div>
+    const AMI_GIFTS = [
+      { id: "g1", name: "Rose", emoji: "🌹", cost: 10 },
+      { id: "g2", name: "Cupcake", emoji: "🧁", cost: 15 },
+      { id: "g3", name: "Ice Cream", emoji: "🍦", cost: 20 },
+      { id: "g4", name: "Star", emoji: "⭐", cost: 30 },
+      { id: "g5", name: "Mic", emoji: "🎤", cost: 50 },
+      { id: "g6", name: "Fire", emoji: "🔥", cost: 100 },
+      { id: "g7", name: "Crown", emoji: "👑", cost: 200 },
+    ];
 
-<div class="modal" id="modal"><div class="modal-box"><h3 id="modalText">Done!</h3><button class="btn" style="margin-top:14px" onclick="closeModal()">OK</button></div></div>
+    const INITIAL_CHATS = [
+      {
+        id: "dm1", user: DEMO_USERS[0], unread: 2, time: "2m",
+        messages: [
+          { id: "m1", fromMe: false, text: "Yo! Hop in Party Turner room, beat switch is wild.", time: "10:12 PM" },
+          { id: "m2", fromMe: false, text: "Dropping your shoutout on the next track!", time: "10:14 PM" },
+        ],
+      },
+      {
+        id: "dm2", user: DEMO_USERS[1], unread: 1, time: "18m",
+        messages: [{ id: "m3", fromMe: false, text: "Just uploaded the new 30s studio hook, check it out 🎤", time: "9:55 PM" }],
+      },
+      {
+        id: "dm3", user: DEMO_USERS[4], unread: 0, time: "1h",
+        messages: [
+          { id: "m4", fromMe: true, text: "Are we running CODM ranked tonight?", time: "8:40 PM" },
+          { id: "m5", fromMe: false, text: "100%! Squad room opens in 15 mins.", time: "8:45 PM" },
+        ],
+      },
+      {
+        id: "dm4", user: DEMO_USERS[3], unread: 0, time: "3h",
+        messages: [{ id: "m6", fromMe: false, text: "Loved the neon green hoodie look from yesterday!", time: "7:05 PM" }],
+      },
+    ];
 
-<script>
-let balance=1247;
-function updateBal(){document.getElementById('bal1').textContent=balance;document.getElementById('bal2').textContent=balance;document.getElementById('bal3').textContent=balance;}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));let nav=document.getElementById('nav-'+id);if(nav)nav.classList.add('active');window.scrollTo(0,0);}
-function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
-function closeModal(){document.getElementById('modal').style.display='none';}
-function likeBtn(btn){let s=btn.querySelector('span');let n=parseFloat(s.textContent);s.textContent=(n+0.1).toFixed(1)+'k';showToast('You liked this post ❤️');}
-function sendChat(){let inp=document.getElementById('chatInput');if(!inp.value)return;let box=document.getElementById('chatBox');box.innerHTML+='<p><b>You:</b> '+inp.value+'</p>';inp.value='';box.scrollTop=box.scrollHeight;}
-function sendGift(name,cost){if(balance<cost){showToast('Not enough AMI! Top up wallet');return;}balance-=cost;updateBal();showToast('You sent '+name+'! 🎁');}
-function buyAMI(amt){balance+=amt;updateBal();showToast('You bought '+amt+' AMI ✅');}
-function createGroup(){let n=document.getElementById('groupName').value;if(!n){showToast('Type a group name first');return;}document.getElementById('myGroups').innerHTML+='<div class="card" onclick="showToast(\'Opening '+n+' chat\')">👥 '+n+' • 1/500 members<br><small>Tap to open chat</small></div>';showToast('Group '+n+' created! 🎉');}
-function createPost(){let c=document.getElementById('postCaption').value||'New vibe post!';showToast('Posted to Home ✅');showScreen('home');}
-function doSearch(v){let r=document.getElementById('searchResults');if(!v){r.innerHTML='<div class="card" onclick="showScreen(\'live\')">⚽ FOOTBALL - 1.2k online</div>';return;}r.innerHTML='<div class="card">🔍 Results for "'+v+'"</div><div class="card" onclick="showScreen(\'live\')">🎉 PARTY TURNER - 2.4k online</div>';}
-</script>
+    const INITIAL_SQUADS = [
+      {
+        id: "sq1", name: "Lagos Night Turn-Up", description: "After-hours Amapiano sets, linkups & soundchecks.",
+        type: "Public", emoji: "🎉", members: 342, maxMembers: 500, joined: true,
+        messages: [
+          { id: "sm1", handle: "@tunde_vibez", avatar: "🎧", text: "Friday setlist is officially locked!", time: "9:40 PM", isMe: false },
+          { id: "sm2", handle: "@emeka_plug", avatar: "🔥", text: "Bringing the whole VI crew tonight.", time: "9:42 PM", isMe: false },
+        ],
+      },
+      {
+        id: "sq2", name: "Naija CODM & FC Pro", description: "Daily 500 AIM scrims, callouts, and tournament brackets.",
+        type: "Public", emoji: "🎮", members: 418, maxMembers: 500, joined: true,
+        messages: [{ id: "sm3", handle: "@femi_playz", avatar: "🎮", text: "Room code drops at 9PM sharp.", time: "8:50 PM", isMe: false }],
+      },
+      {
+        id: "sq3", name: "Creators Inner Circle", description: "Verified creators sharing collabs & monetization tips.",
+        type: "Private", emoji: "💎", members: 128, maxMembers: 500, joined: false,
+        messages: [{ id: "sm4", handle: "@chidinma_o", avatar: "🎤", text: "Collab sheet updated!", time: "Yesterday", isMe: false }],
+      },
+      {
+        id: "sq4", name: "Alté Drip Vault", description: "Hidden drops, early brand lookbooks & stylists.",
+        type: "Secret", emoji: "🕶️", members: 64, maxMembers: 500, joined: true,
+        messages: [{ id: "sm5", handle: "@amaka_drip", avatar: "👗", text: "Sample archive drops at midnight.", time: "6:15 PM", isMe: false }],
+      },
+    ];
+
+    const AIM_PACKAGES = [
+      { id: "pkg1", ami: 100, usd: 2, ngn: 3200, badge: "Starter" },
+      { id: "pkg2", ami: 500, usd: 10, ngn: 16000, badge: "Popular" },
+      { id: "pkg3", ami: 1000, usd: 20, ngn: 32000, badge: "Creator Pick" },
+      { id: "pkg4", ami: 5000, usd: 100, ngn: 160000, badge: "VIP Whale" },
+    ];
+
+    const PAYMENT_METHODS = [
+      { id: "Card", label: "Card", emoji: "💳", sub: "Paystack Visa / Verve / MC" },
+      { id: "Opay", label: "Opay", emoji: "⚡", sub: "Paystack Instant Opay" },
+      { id: "Bank Transfer", label: "Bank Transfer", emoji: "🏦", sub: "Paystack Naira Transfer" },
+      { id: "USSD", label: "USSD", emoji: "📱", sub: "Paystack *737# / *901#" },
+    ];
+
+    const INITIAL_TRANSACTIONS = [
+      { id: "tx1", title: "Paystack Opay Top-Up", subtitle: "+500 AIM • Instant", amount: 500, credit: true, time: "Today, 4:10 PM", emoji: "⚡" },
+      { id: "tx2", title: "Sent Crown to @tunde_vibez", subtitle: "PARTY TURNER Live", amount: 200, credit: false, time: "Today, 2:45 PM", emoji: "👑" },
+      { id: "tx3", title: "Creator Views Payout", subtitle: "Monetized 30s Reels", amount: 341, credit: true, time: "Yesterday", emoji: "🎬" },
+    ];
+
+    const INITIAL_NOTIFICATIONS = [
+      { id: "n1", emoji: "🎙️", title: "PARTY TURNER is LIVE", body: "@tunde_vibez & 2.4k people are vibing right now.", time: "2m ago", unread: true, tab: "Live" },
+      { id: "n2", emoji: "👑", title: "Crown Gift Trending", body: "@emeka_plug sent a 200 AIM Crown in GAME.", time: "15m ago", unread: true, tab: "Live" },
+      { id: "n3", emoji: "💬", title: "New message from @chidinma_o", body: "Just uploaded the new 30s studio hook...", time: "18m ago", unread: true, tab: "Chat" },
+      { id: "n4", emoji: "💰", title: "+341 AIM Credited", body: "Creator view earnings added to your Wallet.", time: "Yesterday", unread: false, tab: "Wallet" },
+    ];
+
+    const PROFILE_VIDEOS = [
+      { id: "pv1", title: "Midnight Studio Beat", duration: "30s", views: "420K", likes: 18400, room: "MUSIC", gradient: "from-emerald-900 to-black" },
+      { id: "pv2", title: "Lagos Tech Setup Tour", duration: "30s", views: "310K", likes: 12100, room: "LIFESTYLE", gradient: "from-cyan-900 to-black" },
+      { id: "pv3", title: "Party Turner Crowd Check", duration: "30s", views: "255K", likes: 9800, room: "PARTY TURNER", gradient: "from-purple-900 to-black" },
+      { id: "pv4", title: "CODM Sniper Montage", duration: "30s", views: "145K", likes: 6400, room: "GAME", gradient: "from-amber-900 to-black" },
+      { id: "pv5", title: "Neon Drip Unboxing", duration: "30s", views: "98K", likes: 4300, room: "FASHION", gradient: "from-lime-900 to-black" },
+    ];
+
+    const BOTTOM_TABS = [
+      { id: "Home", label: "Home", emoji: "🏠" },
+      { id: "Live", label: "Live", emoji: "🎙️" },
+      { id: "Chat", label: "Chat", emoji: "💬" },
+      { id: "Squads", label: "Squads", emoji: "👥" },
+      { id: "Wallet", label: "Wallet", emoji: "💳" },
+      { id: "Profile", label: "Profile", emoji: "👤" },
+    ];
+
+    function formatViews(n) {
+      if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+      if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+      return String(n);
+    }
+
+    function App() {
+      const [activeTab, setActiveTab] = useState("Home");
+      const [toast, setToast] = useState(null);
+
+      // Install-to-Home-Screen state
+      const [deferredPrompt, setDeferredPrompt] = useState(null);
+      const [installHelpOpen, setInstallHelpOpen] = useState(false);
+
+      useEffect(() => {
+        const handler = (e) => {
+          e.preventDefault();
+          setDeferredPrompt(e);
+        };
+        window.addEventListener("beforeinstallprompt", handler);
+        return () => window.removeEventListener("beforeinstallprompt", handler);
+      }, []);
+
+      const handleInstallClick = async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          setDeferredPrompt(null);
+        } else {
+          setInstallHelpOpen(true);
+        }
+      };
+
+      // Core App State
+      const [stories, setStories] = useState(INITIAL_STORIES);
+      const [posts, setPosts] = useState(INITIAL_POSTS);
+      const [rooms] = useState(LIVE_ROOMS);
+      const [selectedRoomId, setSelectedRoomId] = useState(null);
+      const [activeLiveRoomId, setActiveLiveRoomId] = useState("party_turner");
+      const [liveChats, setLiveChats] = useState(() =>
+        Object.fromEntries(LIVE_ROOMS.map((r) => [r.id, r.initialChat]))
+      );
+      const [tournaments, setTournaments] = useState(INITIAL_TOURNAMENTS);
+      const [gameChat, setGameChat] = useState([
+        { id: "gc1", handle: "@femi_playz", avatar: "🎮", text: "CODM Cup lobby opens in 20 mins!" },
+        { id: "gc2", handle: "@ibrahim_k", avatar: "⚽", text: "Who's ready for EA FC qualifiers?" },
+      ]);
+
+      const [chats, setChats] = useState(INITIAL_CHATS);
+      const [activeChatId, setActiveChatId] = useState(null);
+      const [squads, setSquads] = useState(INITIAL_SQUADS);
+      const [activeSquadId, setActiveSquadId] = useState(null);
+
+      const [aimBalance, setAimBalance] = useState(1241);
+      const [paymentMethod, setPaymentMethod] = useState("Opay");
+      const [paystackPkg, setPaystackPkg] = useState(null);
+      const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
+      const [withdrawOpen, setWithdrawOpen] = useState(false);
+      const [topUpForm, setTopUpForm] = useState({
+        fullName: "", bankName: "", accountNumber: "", accountName: "", phoneNumber: "", email: "",
+      });
+
+      const [profile, setProfile] = useState({
+        name: "Vibezzy Official", handle: "@vibezzzy", bio: "Creating vibes, Tech, Music",
+        followers: 12400, following: 980, views: "1.2M", isFollowing: false,
+      });
+      const [profileVideos, setProfileVideos] = useState(PROFILE_VIDEOS);
+      const [editProfileOpen, setEditProfileOpen] = useState(false);
+
+      const [searchOpen, setSearchOpen] = useState(false);
+      const [searchQuery, setSearchQuery] = useState("");
+      const [notificationsOpen, setNotificationsOpen] = useState(false);
+      const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
+      const [createPostOpen, setCreatePostOpen] = useState(false);
+      const [activeStory, setActiveStory] = useState(null);
+      const [activeVideo, setActiveVideo] = useState(null);
+      const [commentsPostId, setCommentsPostId] = useState(null);
+      const [giftBanner, setGiftBanner] = useState(null);
+      const [handRaised, setHandRaised] = useState(false);
+
+      const showToast = (msg) => {
+        setToast(msg);
+        setTimeout(() => setToast((prev) => (prev === msg ? null : prev)), 2600);
+      };
+
+      const unreadNotifs = notifications.filter((n) => n.unread).length;
+      const unreadChats = chats.reduce((acc, c) => acc + c.unread, 0);
+
+      const activeRoom = rooms.find((r) => r.id === selectedRoomId);
+      const activeChat = chats.find((c) => c.id === activeChatId);
+      const activeSquad = squads.find((s) => s.id === activeSquadId);
+
+      const handleToggleLikePost = (postId) => {
+        setPosts((prev) =>
+          prev.map((p) => (p.id === postId ? { ...p, liked: !p.liked, likes: p.liked ? p.likes - 1 : p.likes + 1 } : p))
+        );
+      };
+
+      const handleAddComment = (postId, text) => {
+        if (!text.trim()) return;
+        setPosts((prev) =>
+          prev.map((p) =>
+            p.id === postId
+              ? { ...p, comments: [...p.comments, { id: `c_${Date.now()}`, handle: profile.handle, avatar: "💚", text: text.trim() }] }
+              : p
+          )
+        );
+        showToast("Comment posted!");
+      };
+
+      const handleCreatePost = ({ roomId, caption, mediaType, previewUrl }) => {
+        const room = rooms.find((r) => r.id === roomId) || rooms[0];
+        const newPost = {
+          id: `p_${Date.now()}`, roomId: room.id, roomName: room.name,
+          authorName: profile.name, authorHandle: profile.handle, authorAvatar: "💚", verified: true,
+          mediaType, durationSec: mediaType === "video" ? 30 : 0,
+          caption: caption.trim(), previewUrl: previewUrl || null,
+          gradient: "from-emerald-950 via-zinc-900 to-black",
+          views: 1, likes: 0, liked: false, timeAgo: "Just now", comments: [],
+        };
+        setPosts((prev) => [newPost, ...prev]);
+        setCreatePostOpen(false);
+        setActiveTab("Home");
+        setSelectedRoomId(null);
+        showToast(`Posted to ${room.name}!`);
+      };
+
+      const handleSendGift = (gift) => {
+        if (aimBalance < gift.cost) {
+          showToast(`Need ${gift.cost} AIM for ${gift.name}. Top up Wallet!`);
+          setActiveTab("Wallet");
+          return;
+        }
+        const room = rooms.find((r) => r.id === activeLiveRoomId) || rooms[0];
+        setAimBalance((b) => b - gift.cost);
+        setLiveChats((prev) => ({
+          ...prev,
+          [room.id]: [
+            ...(prev[room.id] || []),
+            { id: `g_${Date.now()}`, handle: profile.handle, avatar: gift.emoji, text: `sent ${gift.name} (${gift.cost} AIM) to ${room.host.handle}!`, isGift: true },
+          ],
+        }));
+        setTransactions((prev) => [
+          { id: `tx_${Date.now()}`, title: `Sent ${gift.name} to ${room.host.handle}`, subtitle: `${room.name} Live`, amount: gift.cost, credit: false, time: "Just now", emoji: gift.emoji },
+          ...prev,
+        ]);
+        setGiftBanner(`You sent ${gift.name}! ${gift.emoji}`);
+        setTimeout(() => setGiftBanner(null), 2400);
+      };
+
+      const handleConfirmPaystack = (pkg) => {
+        setAimBalance((b) => b + pkg.ami);
+        setTransactions((prev) => [
+          { id: `tx_${Date.now()}`, title: `Paystack ${paymentMethod} Top-Up`, subtitle: `+${pkg.ami} AIM • $${pkg.usd} (₦${pkg.ngn.toLocaleString()})`, amount: pkg.ami, credit: true, time: "Just now", emoji: "💚" },
+          ...prev,
+        ]);
+        setPaystackPkg(null);
+        showToast(`+${pkg.ami} AIM added via Paystack ${paymentMethod}!`);
+      };
+
+      return (
+        <div className="min-h-screen bg-black text-white flex justify-center">
+          <div className="w-full max-w-md min-h-screen bg-black border-x border-zinc-900 flex flex-col relative pb-20">
+
+            {/* Global Header */}
+            {!activeRoom && !activeChat && !activeSquad && (
+              <header className="sticky top-0 z-30 bg-black/95 backdrop-blur-md border-b border-zinc-900 px-4 py-3 flex items-center justify-between">
+                <button
+                  onClick={() => { setActiveTab("Home"); setSelectedRoomId(null); }}
+                  className="flex items-center gap-2 text-left"
+                >
+                  {window.VIBEZZY_ICON_URL && (
+                    <img src={window.VIBEZZY_ICON_URL} alt="VIBEZZY Logo" className="w-8 h-8 rounded-xl border border-[#00FF88]/50" />
+                  )}
+                  <div>
+                    <div className="text-lg font-black tracking-tight leading-none">
+                      VIBE<span className="text-[#00FF88]">ZZY</span>
+                    </div>
+                    <p className="text-[9px] font-bold text-zinc-400">Your vibe. Your people. Your AIM.</p>
+                  </div>
+                </button>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={handleInstallClick}
+                    className="px-2.5 py-1.5 rounded-full bg-zinc-900 border border-[#00FF88]/50 text-[#00FF88] text-[10px] font-black"
+                    title="Install VIBEZZY to Home Screen"
+                  >
+                    📲 App
+                  </button>
+                  <button
+                    onClick={() => setCreatePostOpen(true)}
+                    className="w-8 h-8 rounded-full bg-[#00FF88] text-black font-black text-base flex items-center justify-center"
+                    title="Create Post"
+                  >
+                    ＋
+                  </button>
+                  <button
+                    onClick={() => setSearchOpen(true)}
+                    className="w-8 h-8 rounded-full bg-[#1A1A1D] border border-zinc-800 text-sm flex items-center justify-center"
+                    title="Search"
+                  >
+                    🔍
+                  </button>
+                  <button
+                    onClick={() => setNotificationsOpen(true)}
+                    className="relative w-8 h-8 rounded-full bg-[#1A1A1D] border border-zinc-800 text-sm flex items-center justify-center"
+                    title="Notifications"
+                  >
+                    🔔
+                    {unreadNotifs > 0 && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#00FF88] text-black text-[9px] font-black flex items-center justify-center">
+                        {unreadNotifs}
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </header>
+            )}
+
+            {/* Main Content */}
+            <main className="flex-1">
+              {activeRoom ? (
+                <RoomDetailView
+                  room={activeRoom}
+                  posts={posts.filter((p) => p.roomId === activeRoom.id)}
+                  tournaments={tournaments}
+                  gameChat={gameChat}
+                  onBack={() => setSelectedRoomId(null)}
+                  onLike={handleToggleLikePost}
+                  onComment={(id) => setCommentsPostId(id)}
+                  onShare={(p) => showToast(`Shared ${p.authorHandle}'s vibe!`)}
+                  onJoinLiveAudio={() => { setActiveLiveRoomId(activeRoom.id); setSelectedRoomId(null); setActiveTab("Live"); }}
+                  onSendGameChat={(txt) => {
+                    if (!txt.trim()) return;
+                    setGameChat((prev) => [...prev, { id: `gc_${Date.now()}`, handle: profile.handle, avatar: "💚", text: txt.trim() }]);
+                  }}
+                  onToggleTournament={(tid) => {
+                    setTournaments((prev) => prev.map((t) => t.id === tid ? { ...t, joined: !t.joined, players: t.joined ? t.players - 1 : t.players + 1 } : t));
+                    showToast("Tournament status updated!");
+                  }}
+                />
+              ) : activeChat ? (
+                <DirectChatView
+                  chat={activeChat}
+                  onBack={() => setActiveChatId(null)}
+                  onSend={(txt) => {
+                    if (!txt.trim()) return;
+                    setChats((prev) => prev.map((c) => c.id === activeChat.id ? { ...c, time: "Now", messages: [...c.messages, { id: `m_${Date.now()}`, fromMe: true, text: txt.trim(), time: "Now" }] } : c));
+                  }}
+                />
+              ) : activeSquad ? (
+                <SquadChatView
+                  squad={activeSquad}
+                  onBack={() => setActiveSquadId(null)}
+                  onSend={(txt) => {
+                    if (!txt.trim()) return;
+                    setSquads((prev) => prev.map((s) => s.id === activeSquad.id ? { ...s, messages: [...s.messages, { id: `sm_${Date.now()}`, handle: profile.handle, avatar: "💚", text: txt.trim(), time: "Now", isMe: true }] } : s));
+                  }}
+                />
+              ) : (
+                <>
+                  {activeTab === "Home" && (
+                    <div className="p-4 space-y-5">
+                      <button
+                        onClick={() => { setActiveLiveRoomId("party_turner"); setActiveTab("Live"); }}
+                        className="w-full text-left rounded-2xl p-4 bg-gradient-to-r from-[#0B3522] via-[#121614] to-[#1A1A1D] border border-[#00FF88]/40"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black">● 7 ROOMS LIVE NOW</span>
+                          <span className="text-xs font-black text-[#00FF88]">Listen Live →</span>
+                        </div>
+                        <h2 className="text-base font-black mt-2">PARTY TURNER • 2.4k listening 🎉</h2>
+                        <p className="text-xs text-zinc-300 mt-0.5">Hosted by @tunde_vibez with @emeka_plug & @kemi_spark</p>
+                      </button>
+
+                      {/* 24h Stories */}
+                      <section>
+                        <h3 className="text-xs font-black uppercase text-zinc-400 mb-2">24h Vibes</h3>
+                        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+                          {stories.map((s) => (
+                            <button
+                              key={s.id}
+                              onClick={() => { setStories((p) => p.map((x) => x.id === s.id ? { ...x, viewed: true } : x)); setActiveStory(s); }}
+                              className="shrink-0 w-16 flex flex-col items-center"
+                            >
+                              <div className={`p-[2.5px] rounded-full ${s.viewed ? "bg-zinc-700" : "bg-gradient-to-tr from-[#00FF88] to-cyan-400"}`}>
+                                <div className="w-14 h-14 rounded-full bg-[#1A1A1D] border-2 border-black flex items-center justify-center text-2xl">{s.avatar}</div>
+                              </div>
+                              <span className="text-[10px] font-bold truncate w-full text-center mt-1">{s.handle}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </section>
+
+                      {/* 7 Live Rooms */}
+                      <section>
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-xs font-black uppercase text-zinc-400">Live Vibe Rooms (7)</h3>
+                          <span className="text-[11px] font-bold text-[#00FF88]">All active</span>
+                        </div>
+                        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+                          {rooms.map((r) => (
+                            <button
+                              key={r.id}
+                              onClick={() => setSelectedRoomId(r.id)}
+                              className="shrink-0 w-40 text-left rounded-2xl p-3 bg-[#1A1A1D] border border-zinc-800 hover:border-[#00FF88]"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-2xl">{r.emoji}</span>
+                                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00FF88]/15 text-[#00FF88]">● {r.display}</span>
+                              </div>
+                              <p className="text-sm font-black mt-2 truncate">{r.name}</p>
+                              <p className="text-[11px] text-zinc-400 line-clamp-2 mt-0.5">{r.topic}</p>
+                            </button>
+                          ))}
+                        </div>
+                      </section>
+
+                      {/* Feed */}
+                      <section className="space-y-4">
+                        <h3 className="text-xs font-black uppercase text-zinc-400">Trending Feed</h3>
+                        {posts.map((post) => (
+                          <PostCard
+                            key={post.id}
+                            post={post}
+                            onLike={() => handleToggleLikePost(post.id)}
+                            onComment={() => setCommentsPostId(post.id)}
+                            onShare={() => showToast(`Shared ${post.authorHandle}'s vibe!`)}
+                            onOpenRoom={() => setSelectedRoomId(post.roomId)}
+                          />
+                        ))}
+                      </section>
+                    </div>
+                  )}
+
+                  {activeTab === "Live" && (
+                    <LiveAudioView
+                      rooms={rooms}
+                      activeRoomId={activeLiveRoomId}
+                      onSelectRoom={setActiveLiveRoomId}
+                      chatMessages={liveChats[activeLiveRoomId] || []}
+                      onSendChat={(txt) => {
+                        if (!txt.trim()) return;
+                        setLiveChats((prev) => ({
+                          ...prev,
+                          [activeLiveRoomId]: [...(prev[activeLiveRoomId] || []), { id: `lc_${Date.now()}`, handle: profile.handle, avatar: "💚", text: txt.trim(), isGift: false }],
+                        }));
+                      }}
+                      onSendGift={handleSendGift}
+                      giftBanner={giftBanner}
+                      handRaised={handRaised}
+                      onToggleHand={() => { setHandRaised((h) => !h); showToast(!handRaised ? "Hand raised ✋" : "Hand lowered"); }}
+                      followers={profile.followers}
+                      onToggleTestFollowers={() => setProfile((p) => ({ ...p, followers: p.followers < 500 ? 12400 : 320 }))}
+                      onAttemptHost={() => showToast(profile.followers < 500 ? "Need 500 followers to host" : "You're live on stage! 🎙️")}
+                    />
+                  )}
+
+                  {activeTab === "Chat" && (
+                    <ChatListView
+                      chats={chats}
+                      users={DEMO_USERS}
+                      onOpenChat={(id) => { setChats((p) => p.map((c) => c.id === id ? { ...c, unread: 0 } : c)); setActiveChatId(id); }}
+                      onStartUserChat={(u) => {
+                        const ex = chats.find((c) => c.user.id === u.id);
+                        if (ex) setActiveChatId(ex.id);
+                        else {
+                          const nc = { id: `dm_${Date.now()}`, user: u, unread: 0, time: "Now", messages: [] };
+                          setChats((p) => [nc, ...p]);
+                          setActiveChatId(nc.id);
+                        }
+                      }}
+                    />
+                  )}
+
+                  {activeTab === "Squads" && (
+                    <SquadsView
+                      squads={squads}
+                      onOpenSquad={setActiveSquadId}
+                      onToggleJoin={(id) => {
+                        setSquads((p) => p.map((s) => s.id === id ? { ...s, joined: !s.joined, members: s.joined ? s.members - 1 : s.members + 1 } : s));
+                        showToast("Squad updated!");
+                      }}
+                      onCreateSquad={(sq) => {
+                        setSquads((p) => [{ ...sq, id: `sq_${Date.now()}`, members: 1, joined: true, messages: [{ id: `sm_${Date.now()}`, handle: profile.handle, avatar: "💚", text: `Welcome to ${sq.name}!`, time: "Now", isMe: true }] }, ...p]);
+                        showToast(`${sq.name} Squad created!`);
+                      }}
+                    />
+                  )}
+
+                  {activeTab === "Wallet" && (
+                    <WalletView
+                      balance={aimBalance}
+                      paymentMethod={paymentMethod}
+                      onSelectMethod={setPaymentMethod}
+                      onBuyPackage={setPaystackPkg}
+                      topUpForm={topUpForm}
+                      onChangeForm={setTopUpForm}
+                      onSubmitTopUp={(e) => {
+                        e.preventDefault();
+                        if (!topUpForm.fullName || !topUpForm.bankName || !topUpForm.accountNumber) {
+                          showToast("Fill in Full Name, Bank Name & Account Number");
+                          return;
+                        }
+                        setAimBalance((b) => b + 250);
+                        setTransactions((p) => [{ id: `tx_${Date.now()}`, title: `Bank Top-Up (${topUpForm.bankName})`, subtitle: topUpForm.fullName, amount: 250, credit: true, time: "Just now", emoji: "🏦" }, ...p]);
+                        setTopUpForm({ fullName: "", bankName: "", accountNumber: "", accountName: "", phoneNumber: "", email: "" });
+                        showToast("+250 AIM credited!");
+                      }}
+                      onOpenWithdraw={() => setWithdrawOpen(true)}
+                      onCopyWallet={() => {
+                        if (navigator.clipboard) navigator.clipboard.writeText("VBZ-AIM-8842-1241").catch(() => {});
+                        showToast("Wallet ID VBZ-AIM-8842-1241 copied!");
+                      }}
+                      onShareWallet={() => showToast("Shared @vibezzzy • VBZ-AIM-8842-1241")}
+                      transactions={transactions}
+                    />
+                  )}
+
+                  {activeTab === "Profile" && (
+                    <ProfileView
+                      profile={profile}
+                      aimBalance={aimBalance}
+                      videos={profileVideos}
+                      onTopUp={() => setActiveTab("Wallet")}
+                      onToggleFollow={() => setProfile((p) => ({ ...p, isFollowing: !p.isFollowing, followers: p.isFollowing ? p.followers - 1 : p.followers + 1 }))}
+                      onEditProfile={() => setEditProfileOpen(true)}
+                      onCycleFollowerTier={() => setProfile((p) => ({ ...p, followers: p.followers >= 5000 ? 3200 : 12400 }))}
+                      onOpenVideo={setActiveVideo}
+                    />
+                  )}
+                </>
+              )}
+            </main>
+
+            {/* Bottom Navigation: Home, Live, Chat, Squads, Wallet, Profile */}
+            {!activeRoom && !activeChat && !activeSquad && (
+              <nav className="fixed bottom-0 w-full max-w-md z-30 bg-black/95 backdrop-blur-lg border-t border-zinc-900 px-1 py-2 grid grid-cols-6">
+                {BOTTOM_TABS.map((t) => {
+                  const active = activeTab === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => setActiveTab(t.id)}
+                      className={`relative flex flex-col items-center justify-center gap-0.5 py-1 rounded-xl ${active ? "text-[#00FF88]" : "text-zinc-400"}`}
+                    >
+                      <span className="text-lg leading-none">{t.emoji}</span>
+                      {t.id === "Live" && <span className="absolute top-0.5 right-4 w-2 h-2 rounded-full bg-rose-500 animate-ping" />}
+                      {t.id === "Chat" && unreadChats > 0 && (
+                        <span className="absolute top-0 right-3 px-1 min-w-[14px] h-[14px] rounded-full bg-[#00FF88] text-black text-[9px] font-black flex items-center justify-center">{unreadChats}</span>
+                      )}
+                      <span className="text-[10px] font-black">{t.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            )}
+
+            {toast && (
+              <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-[#00FF88] text-black px-4 py-2 rounded-full font-black text-xs shadow-lg whitespace-nowrap">
+                {toast}
+              </div>
+            )}
+
+            {/* INSTALL APP GUIDE MODAL */}
+            {installHelpOpen && (
+              <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+                <div className="w-full max-w-sm rounded-3xl bg-[#1A1A1D] border border-[#00FF88]/50 p-5 space-y-3 text-center">
+                  {window.VIBEZZY_ICON_URL && (
+                    <img src={window.VIBEZZY_ICON_URL} alt="VIBEZZY App Icon" className="w-20 h-20 rounded-2xl mx-auto border border-[#00FF88]" />
+                  )}
+                  <h3 className="text-base font-black">Install VIBEZZY App</h3>
+                  <p className="text-xs text-zinc-300 text-left space-y-1">
+                    <span className="block"><strong className="text-[#00FF88]">iPhone / iPad (Safari):</strong> Tap the <strong>Share (⬆️)</strong> button → <strong>Add to Home Screen</strong>.</span>
+                    <span className="block pt-1"><strong className="text-[#00FF88]">Android (Chrome):</strong> Tap the <strong>⋮ Menu</strong> → <strong>Add to Home screen / Install app</strong>.</span>
+                  </p>
+                  <button onClick={() => setInstallHelpOpen(false)} className="w-full py-2.5 rounded-xl bg-[#00FF88] text-black font-black text-xs">
+                    Got it!
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* OTHER MODALS */}
+            {searchOpen && (
+              <SearchModal
+                query={searchQuery} onChangeQuery={setSearchQuery}
+                users={DEMO_USERS} rooms={rooms} squads={squads}
+                onClose={() => setSearchOpen(false)}
+                onSelectRoom={(id) => { setSearchOpen(false); setActiveTab("Home"); setSelectedRoomId(id); }}
+                onSelectSquad={(id) => { setSearchOpen(false); setActiveTab("Squads"); setActiveSquadId(id); }}
+                onSelectUser={(u) => {
+                  setSearchOpen(false); setActiveTab("Chat");
+                  const f = chats.find((c) => c.user.id === u.id);
+                  if (f) setActiveChatId(f.id);
+                }}
+              />
+            )}
+
+            {notificationsOpen && (
+              <NotificationsModal
+                notifications={notifications}
+                onClose={() => setNotificationsOpen(false)}
+                onMarkAll={() => setNotifications((p) => p.map((n) => ({ ...n, unread: false })))}
+                onClickItem={(n) => {
+                  setNotifications((p) => p.map((x) => x.id === n.id ? { ...x, unread: false } : x));
+                  setNotificationsOpen(false);
+                  setActiveTab(n.tab);
+                }}
+              />
+            )}
+
+            {createPostOpen && <CreatePostModal rooms={rooms} onClose={() => setCreatePostOpen(false)} onSubmit={handleCreatePost} />}
+
+            {activeStory && (
+              <StoryModal
+                story={activeStory}
+                onClose={() => setActiveStory(null)}
+                onJumpRoom={(rid) => { setActiveStory(null); setActiveLiveRoomId(rid); setActiveTab("Live"); }}
+                onReply={(txt) => { showToast(`Replied to ${activeStory.handle}: "${txt}"`); setActiveStory(null); }}
+              />
+            )}
+
+            {activeVideo && (
+              <VideoModal
+                video={activeVideo}
+                onClose={() => setActiveVideo(null)}
+                onLike={() => {
+                  setProfileVideos((p) => p.map((v) => v.id === activeVideo.id ? { ...v, likes: v.likes + 1 } : v));
+                  setActiveVideo((v) => ({ ...v, likes: v.likes + 1 }));
+                  showToast("Liked 30s clip! 💚");
+                }}
+              />
+            )}
+
+            {commentsPostId && (
+              <CommentsModal
+                post={posts.find((p) => p.id === commentsPostId)}
+                onClose={() => setCommentsPostId(null)}
+                onAdd={(txt) => handleAddComment(commentsPostId, txt)}
+              />
+            )}
+
+            {paystackPkg && (
+              <PaystackModal
+                pkg={paystackPkg} method={paymentMethod} onSelectMethod={setPaymentMethod}
+                onClose={() => setPaystackPkg(null)} onConfirm={() => handleConfirmPaystack(paystackPkg)}
+              />
+            )}
+
+            {withdrawOpen && (
+              <WithdrawModal
+                balance={aimBalance}
+                onClose={() => setWithdrawOpen(false)}
+                onConfirm={(amt, bank) => {
+                  if (amt <= 0 || amt > aimBalance) { showToast("Invalid AIM amount"); return; }
+                  setAimBalance((b) => b - amt);
+                  setTransactions((p) => [{ id: `tx_${Date.now()}`, title: `Withdrawal to ${bank}`, subtitle: `-$${(amt * 0.02).toFixed(2)}`, amount: amt, credit: false, time: "Just now", emoji: "🏧" }, ...p]);
+                  setWithdrawOpen(false);
+                  showToast(`Withdrew ${amt} AIM to ${bank}!`);
+                }}
+              />
+            )}
+
+            {editProfileOpen && (
+              <EditProfileModal
+                profile={profile}
+                onClose={() => setEditProfileOpen(false)}
+                onSave={(upd) => { setProfile((p) => ({ ...p, ...upd })); setEditProfileOpen(false); showToast("Profile updated!"); }}
+              />
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    function PostCard({ post, onLike, onComment, onShare, onOpenRoom }) {
+      return (
+        <article className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 overflow-hidden">
+          <div className="p-3.5 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-full bg-zinc-900 border border-[#00FF88]/40 flex items-center justify-center text-xl">{post.authorAvatar}</div>
+              <div>
+                <p className="text-sm font-black">{post.authorName} {post.verified && <span className="text-[#00FF88]">✓</span>}</p>
+                <p className="text-[11px] text-zinc-400">{post.authorHandle} • {post.timeAgo}</p>
+              </div>
+            </div>
+            <button onClick={onOpenRoom} className="px-2.5 py-1 rounded-full bg-black border border-zinc-700 text-[10px] font-black text-[#00FF88]">{post.roomName}</button>
+          </div>
+
+          <div className={`relative h-56 bg-gradient-to-br ${post.gradient} flex flex-col items-center justify-center px-6 text-center`}>
+            {post.previewUrl ? (
+              <img src={post.previewUrl} alt="Upload" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+            ) : null}
+            <div className="relative z-10 flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-black/60 border border-[#00FF88] flex items-center justify-center text-xl mb-2">
+                {post.mediaType === "video" ? "▶️" : "📸"}
+              </div>
+              <p className="text-sm font-bold text-white drop-shadow">{post.caption}</p>
+            </div>
+            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/70 text-[10px] font-black">
+              {post.mediaType === "video" ? `🎬 ${post.durationSec}s` : "📸 Photo"}
+            </span>
+            <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/70 text-[10px] font-black text-[#00FF88]">
+              👁️ {formatViews(post.views)}
+            </span>
+          </div>
+
+          <div className="px-4 py-3 flex items-center justify-between border-t border-zinc-800/70 text-xs font-black">
+            <div className="flex gap-5">
+              <button onClick={onLike} className={post.liked ? "text-[#00FF88]" : "text-zinc-300"}>
+                {post.liked ? "💚" : "🤍"} {post.likes.toLocaleString()}
+              </button>
+              <button onClick={onComment} className="text-zinc-300">💬 {post.comments.length}</button>
+            </div>
+            <button onClick={onShare} className="text-zinc-300 hover:text-[#00FF88]">↗️ Share</button>
+          </div>
+        </article>
+      );
+    }
+
+    function RoomDetailView({ room, posts, tournaments, gameChat, onBack, onLike, onComment, onShare, onJoinLiveAudio, onSendGameChat, onToggleTournament }) {
+      const [gameTab, setGameTab] = useState("clips");
+      const [txt, setTxt] = useState("");
+      const isGame = room.id === "game";
+
+      return (
+        <div className="min-h-screen bg-black pb-8">
+          <div className="sticky top-0 z-20 bg-black/95 border-b border-zinc-900 p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button onClick={onBack} className="w-9 h-9 rounded-full bg-[#1A1A1D] flex items-center justify-center font-black">←</button>
+              <div>
+                <h2 className="text-base font-black">{room.emoji} {room.name}</h2>
+                <p className="text-[11px] font-bold text-[#00FF88]">● {room.display} online</p>
+              </div>
+            </div>
+            <button onClick={onJoinLiveAudio} className="px-3 py-1.5 rounded-full bg-[#00FF88] text-black text-xs font-black">🎙️ Live Audio</button>
+          </div>
+
+          {isGame && (
+            <div className="grid grid-cols-3 gap-2 p-4 pb-0">
+              {[["clips", "Clips"], ["chat", "Game Chat"], ["tournaments", "Tournaments"]].map(([id, lbl]) => (
+                <button key={id} onClick={() => setGameTab(id)} className={`py-2 rounded-xl text-xs font-black border ${gameTab === id ? "bg-[#00FF88] text-black border-[#00FF88]" : "bg-[#1A1A1D] border-zinc-800"}`}>{lbl}</button>
+              ))}
+            </div>
+          )}
+
+          <div className="p-4 space-y-4">
+            {(!isGame || gameTab === "clips") && (posts.length ? posts.map((p) => (
+              <PostCard key={p.id} post={p} onLike={() => onLike(p.id)} onComment={() => onComment(p.id)} onShare={() => onShare(p)} onOpenRoom={() => {}} />
+            )) : <div className="rounded-2xl bg-[#1A1A1D] p-6 text-center text-xs text-zinc-400">No clips yet in {room.name}. Tap ＋ to post!</div>)}
+
+            {isGame && gameTab === "chat" && (
+              <div className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-4 space-y-3">
+                <div className="space-y-2 max-h-72 overflow-y-auto">
+                  {gameChat.map((m) => (
+                    <div key={m.id} className="bg-black/60 rounded-xl p-2.5 text-xs"><strong className="text-[#00FF88]">{m.avatar} {m.handle}</strong> {m.text}</div>
+                  ))}
+                </div>
+                <form onSubmit={(e) => { e.preventDefault(); onSendGameChat(txt); setTxt(""); }} className="flex gap-2">
+                  <input value={txt} onChange={(e) => setTxt(e.target.value)} placeholder="Drop UID or banter..." className="flex-1 bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white" />
+                  <button type="submit" className="px-4 py-2 rounded-xl bg-[#00FF88] text-black font-black text-xs">Send</button>
+                </form>
+              </div>
+            )}
+
+            {isGame && gameTab === "tournaments" && tournaments.map((t) => (
+              <div key={t.id} className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-4 space-y-2">
+                <div className="flex justify-between text-xs"><span className="font-black text-[#00FF88]">🏆 {t.prizeAmi} AIM</span><span className="text-zinc-400">{t.startsIn}</span></div>
+                <h4 className="text-sm font-black">{t.title}</h4>
+                <p className="text-xs text-zinc-400">{t.game} • {t.players}/{t.maxPlayers} players</p>
+                <button onClick={() => onToggleTournament(t.id)} className={`w-full py-2 rounded-xl text-xs font-black ${t.joined ? "bg-zinc-800 text-[#00FF88]" : "bg-[#00FF88] text-black"}`}>
+                  {t.joined ? "Joined ✓" : "Join Tournament"}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function LiveAudioView({ rooms, activeRoomId, onSelectRoom, chatMessages, onSendChat, onSendGift, giftBanner, handRaised, onToggleHand, followers, onToggleTestFollowers, onAttemptHost }) {
+      const [msg, setMsg] = useState("");
+      const room = rooms.find((r) => r.id === activeRoomId) || rooms[0];
+
+      return (
+        <div className="p-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-black uppercase text-zinc-400">7 Live Audio Rooms</span>
+            <button onClick={onAttemptHost} className="px-3 py-1 rounded-full bg-[#00FF88] text-black text-xs font-black">+ Host</button>
+          </div>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+            {rooms.map((r) => (
+              <button key={r.id} onClick={() => onSelectRoom(r.id)} className={`shrink-0 px-3 py-2 rounded-xl text-xs font-black border ${r.id === room.id ? "bg-[#00FF88] text-black border-[#00FF88]" : "bg-[#1A1A1D] border-zinc-800"}`}>
+                {r.emoji} {r.name} ({r.display})
+              </button>
+            ))}
+          </div>
+
+          <div className="rounded-xl bg-[#1A1A1D] border border-zinc-800 px-3 py-2 flex justify-between text-[11px]">
+            <span className={followers < 500 ? "text-amber-400 font-bold" : "text-[#00FF88] font-bold"}>
+              {followers < 500 ? `🔒 Need 500 followers to host (${followers})` : `🎙️ Host unlocked (${followers.toLocaleString()})`}
+            </span>
+            <button onClick={onToggleTestFollowers} className="underline text-zinc-400 font-bold">Test &lt;500</button>
+          </div>
+
+          <div className="rounded-2xl bg-gradient-to-b from-[#0B3522]/60 to-[#1A1A1D] border border-[#00FF88]/40 p-4 space-y-4">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="px-2 py-0.5 rounded bg-rose-600 text-[10px] font-black">LIVE</span>
+                <span className="ml-2 text-sm font-black">{room.emoji} {room.name}</span>
+                <p className="text-xs text-zinc-300 mt-1">{room.topic}</p>
+              </div>
+              <span className="text-xs font-black text-[#00FF88]">🎧 {room.listeners.toLocaleString()}</span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3 text-center">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 rounded-full bg-black border-2 border-[#00FF88] speaking-ring flex items-center justify-center text-3xl">{room.host.avatar}</div>
+                <span className="text-[10px] font-black text-[#00FF88] mt-1">HOST</span>
+                <span className="text-xs font-bold truncate w-full">{room.host.handle}</span>
+              </div>
+              {room.coHosts.map((ch) => (
+                <div key={ch.handle} className="flex flex-col items-center">
+                  <div className="w-14 h-14 rounded-full bg-black border border-zinc-600 flex items-center justify-center text-2xl mt-1">{ch.avatar}</div>
+                  <span className="text-[10px] font-bold text-zinc-400 mt-1">CO-HOST</span>
+                  <span className="text-xs font-bold truncate w-full">{ch.handle}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-[11px] text-zinc-300 font-bold">🎧 +{room.listeners - 3} listeners</span>
+              <button onClick={onToggleHand} className={`px-3 py-1.5 rounded-full text-xs font-black ${handRaised ? "bg-[#00FF88] text-black" : "bg-black border border-zinc-700"}`}>
+                {handRaised ? "✋ Hand Up" : "✋ Raise Hand"}
+              </button>
+            </div>
+          </div>
+
+          {giftBanner && <div className="rounded-xl bg-[#00FF88] text-black text-center py-2 font-black text-sm">{giftBanner}</div>}
+
+          <div className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-3.5 space-y-2.5">
+            <h4 className="text-xs font-black uppercase text-zinc-400">Live Chat</h4>
+            <div className="space-y-1.5 max-h-40 overflow-y-auto">
+              {chatMessages.map((m) => (
+                <div key={m.id} className={`rounded-xl px-3 py-2 text-xs ${m.isGift ? "bg-[#00FF88]/15 border border-[#00FF88]/40" : "bg-black/60"}`}>
+                  <strong className="text-[#00FF88]">{m.avatar} {m.handle}</strong> {m.text}
+                </div>
+              ))}
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); onSendChat(msg); setMsg(""); }} className="flex gap-2">
+              <input value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="Send live message..." className="flex-1 bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white" />
+              <button type="submit" className="px-4 py-2 rounded-xl bg-[#00FF88] text-black font-black text-xs">Send</button>
+            </form>
+          </div>
+
+          <div className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-3.5">
+            <div className="flex justify-between text-xs font-black mb-2"><span>Send AIM Gift</span><span className="text-[#00FF88]">Min 10 AIM</span></div>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar">
+              {AMI_GIFTS.map((g) => (
+                <button key={g.id} onClick={() => onSendGift(g)} className="shrink-0 w-20 rounded-xl bg-black border border-zinc-800 hover:border-[#00FF88] p-2 text-center">
+                  <div className="text-2xl">{g.emoji}</div>
+                  <div className="text-[11px] font-black mt-0.5">{g.name}</div>
+                  <div className="text-[10px] font-black text-[#00FF88]">{g.cost} AIM</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function ChatListView({ chats, users, onOpenChat, onStartUserChat }) {
+      return (
+        <div className="p-4 space-y-5">
+          <div>
+            <h3 className="text-xs font-black uppercase text-zinc-400 mb-2">People Online</h3>
+            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+              {users.map((u) => (
+                <button key={u.id} onClick={() => onStartUserChat(u)} className="shrink-0 w-16 flex flex-col items-center">
+                  <div className="relative w-12 h-12 rounded-full bg-[#1A1A1D] border border-zinc-700 flex items-center justify-center text-xl">
+                    {u.avatar}
+                    {u.online && <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-[#00FF88] border-2 border-black" />}
+                  </div>
+                  <span className="text-[10px] font-bold truncate w-full text-center mt-1">{u.name.split(" ")[0]}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2.5">
+            <h3 className="text-xs font-black uppercase text-zinc-400">Direct Messages</h3>
+            {chats.map((c) => {
+              const last = c.messages[c.messages.length - 1];
+              return (
+                <button key={c.id} onClick={() => onOpenChat(c.id)} className="w-full text-left rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-3.5 flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center text-2xl">{c.user.avatar}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between"><span className="text-sm font-black">{c.user.name}</span><span className="text-[11px] text-zinc-400">{c.time}</span></div>
+                    <p className="text-xs text-zinc-400 truncate">{last ? last.text : `Message ${c.user.handle}`}</p>
+                  </div>
+                  {c.unread > 0 && <span className="w-5 h-5 rounded-full bg-[#00FF88] text-black text-[10px] font-black flex items-center justify-center">{c.unread}</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    function DirectChatView({ chat, onBack, onSend }) {
+      const [txt, setTxt] = useState("");
+      return (
+        <div className="flex flex-col h-screen bg-black">
+          <div className="p-4 border-b border-zinc-900 flex items-center gap-3">
+            <button onClick={onBack} className="w-9 h-9 rounded-full bg-[#1A1A1D] font-black">←</button>
+            <span className="text-2xl">{chat.user.avatar}</span>
+            <div>
+              <p className="text-sm font-black">{chat.user.name}</p>
+              <p className="text-[11px] text-[#00FF88] font-bold">{chat.user.online ? "● Online" : "Offline"} • {chat.user.city}</p>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-2.5">
+            {chat.messages.map((m) => (
+              <div key={m.id} className={`flex ${m.fromMe ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[78%] rounded-2xl px-3.5 py-2 text-xs ${m.fromMe ? "bg-[#00FF88] text-black font-bold" : "bg-[#1A1A1D]"}`}>
+                  <p>{m.text}</p>
+                  <span className="block text-[9px] opacity-70 mt-0.5">{m.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <form onSubmit={(e) => { e.preventDefault(); onSend(txt); setTxt(""); }} className="p-3 border-t border-zinc-900 flex gap-2">
+            <input value={txt} onChange={(e) => setTxt(e.target.value)} placeholder={`Message ${chat.user.name}...`} className="flex-1 bg-[#1A1A1D] border border-zinc-800 rounded-full px-4 py-2.5 text-xs text-white" />
+            <button type="submit" className="px-4 py-2 rounded-full bg-[#00FF88] text-black font-black text-xs">Send</button>
+          </form>
+        </div>
+      );
+    }
+
+    function SquadsView({ squads, onOpenSquad, onToggleJoin, onCreateSquad }) {
+      const [show, setShow] = useState(false);
+      const [name, setName] = useState("");
+      const [description, setDescription] = useState("");
+      const [type, setType] = useState("Public");
+      const [emoji, setEmoji] = useState("🔥");
+      const [maxMembers, setMaxMembers] = useState(500);
+
+      return (
+        <div className="p-4 space-y-4">
+          <div className="flex justify-between items-center">
+            <div><h2 className="text-base font-black">Squads & Groups</h2><p className="text-xs text-zinc-400">Max 500 members</p></div>
+            <button onClick={() => setShow(!show)} className="px-3.5 py-2 rounded-full bg-[#00FF88] text-black text-xs font-black">{show ? "Close" : "+ Create"}</button>
+          </div>
+          {show && (
+            <form onSubmit={(e) => { e.preventDefault(); if (!name.trim()) return; onCreateSquad({ name: name.trim(), description: description.trim() || "Vibezzy Squad", type, emoji, maxMembers }); setName(""); setDescription(""); setShow(false); }} className="rounded-2xl bg-[#1A1A1D] border border-[#00FF88]/40 p-4 space-y-3">
+              <div className="flex gap-2">
+                {["🔥", "🎧", "⚽", "🎮", "💎", "🇳🇬"].map((ic) => (
+                  <button type="button" key={ic} onClick={() => setEmoji(ic)} className={`w-9 h-9 rounded-xl border ${emoji === ic ? "border-[#00FF88] bg-[#00FF88]/15" : "border-zinc-700 bg-black"}`}>{ic}</button>
+                ))}
+              </div>
+              <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Squad name" required className="w-full bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs" />
+              <input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" className="w-full bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs" />
+              <div className="grid grid-cols-3 gap-2">
+                {["Public", "Private", "Secret"].map((t) => (
+                  <button type="button" key={t} onClick={() => setType(t)} className={`py-2 rounded-xl text-xs font-black border ${type === t ? "bg-[#00FF88] text-black border-[#00FF88]" : "bg-black border-zinc-700"}`}>{t}</button>
+                ))}
+              </div>
+              <div>
+                <label className="text-[11px] font-bold">Max Members: {maxMembers}/500</label>
+                <input type="range" min="20" max="500" step="10" value={maxMembers} onChange={(e) => setMaxMembers(Number(e.target.value))} className="w-full accent-[#00FF88]" />
+              </div>
+              <button type="submit" className="w-full py-2.5 rounded-xl bg-[#00FF88] text-black text-xs font-black">Launch Squad</button>
+            </form>
+          )}
+          {squads.map((s) => (
+            <div key={s.id} className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-4 space-y-2.5">
+              <div className="flex justify-between items-start">
+                <button onClick={() => onOpenSquad(s.id)} className="flex gap-3 text-left">
+                  <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-2xl">{s.emoji}</div>
+                  <div><h4 className="text-sm font-black">{s.name}</h4><p className="text-[11px] text-zinc-400">{s.description}</p></div>
+                </button>
+                <span className="px-2 py-0.5 rounded-full bg-black text-[10px] font-black text-[#00FF88]">{s.type}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[11px] text-zinc-400 font-bold">👥 {s.members}/{s.maxMembers}</span>
+                <div className="flex gap-2">
+                  <button onClick={() => onToggleJoin(s.id)} className={`px-3 py-1.5 rounded-full text-xs font-black ${s.joined ? "bg-zinc-800" : "bg-[#00FF88] text-black"}`}>{s.joined ? "Joined ✓" : "Join"}</button>
+                  <button onClick={() => onOpenSquad(s.id)} className="px-3 py-1.5 rounded-full bg-[#00FF88]/15 text-[#00FF88] text-xs font-black">Open Chat</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    function SquadChatView({ squad, onBack, onSend }) {
+      const [txt, setTxt] = useState("");
+      return (
+        <div className="flex flex-col h-screen bg-black">
+          <div className="p-4 border-b border-zinc-900 flex items-center gap-3">
+            <button onClick={onBack} className="w-9 h-9 rounded-full bg-[#1A1A1D] font-black">←</button>
+            <span className="text-2xl">{squad.emoji}</span>
+            <div><p className="text-sm font-black">{squad.name}</p><p className="text-[11px] text-[#00FF88] font-bold">{squad.type} • {squad.members}/{squad.maxMembers}</p></div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-2">
+            {squad.messages.map((m) => (
+              <div key={m.id} className={`flex ${m.isMe ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[80%] rounded-2xl px-3.5 py-2 text-xs ${m.isMe ? "bg-[#00FF88] text-black font-bold" : "bg-[#1A1A1D]"}`}>
+                  {!m.isMe && <p className="text-[10px] font-black text-[#00FF88]">{m.avatar} {m.handle}</p>}
+                  <p>{m.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <form onSubmit={(e) => { e.preventDefault(); onSend(txt); setTxt(""); }} className="p-3 border-t border-zinc-900 flex gap-2">
+            <input value={txt} onChange={(e) => setTxt(e.target.value)} placeholder={`Message ${squad.name}...`} className="flex-1 bg-[#1A1A1D] border border-zinc-800 rounded-full px-4 py-2.5 text-xs text-white" />
+            <button type="submit" className="px-4 py-2 rounded-full bg-[#00FF88] text-black font-black text-xs">Send</button>
+          </form>
+        </div>
+      );
+    }
+
+    function WalletView({ balance, paymentMethod, onSelectMethod, onBuyPackage, topUpForm, onChangeForm, onSubmitTopUp, onOpenWithdraw, onCopyWallet, onShareWallet, transactions }) {
+      const [copied, setCopied] = useState(false);
+      return (
+        <div className="p-4 space-y-5">
+          <div className="rounded-2xl p-5 bg-gradient-to-br from-[#0B3522] to-[#1A1A1D] border border-[#00FF88]/50">
+            <p className="text-xs font-black uppercase text-[#00FF88]">AIM Wallet Balance</p>
+            <div className="flex items-baseline justify-between mt-1">
+              <h2 className="text-3xl font-black">{balance.toLocaleString()} AIM</h2>
+              <span className="text-xs font-bold text-zinc-300">≈ ${(balance * 0.02).toFixed(2)} • ₦{(balance * 32).toLocaleString()}</span>
+            </div>
+            <p className="text-[11px] text-zinc-400 mt-1">1 AIM = $0.02 • Min 100 AIM ($2 / ₦3,200)</p>
+            <div className="mt-4 flex gap-2">
+              <button onClick={() => onBuyPackage(AIM_PACKAGES[1])} className="flex-1 py-2.5 rounded-xl bg-[#00FF88] text-black text-xs font-black">+ Paystack Top-Up</button>
+              <button onClick={onOpenWithdraw} className="flex-1 py-2.5 rounded-xl bg-black border border-zinc-700 text-xs font-black">Withdraw AIM</button>
+            </div>
+          </div>
+
+          <section>
+            <h3 className="text-xs font-black uppercase text-zinc-400 mb-2">Paystack Payment Methods</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {PAYMENT_METHODS.map((m) => (
+                <button key={m.id} onClick={() => onSelectMethod(m.id)} className={`p-3 rounded-xl border text-left ${paymentMethod === m.id ? "bg-[#00FF88]/15 border-[#00FF88]" : "bg-[#1A1A1D] border-zinc-800"}`}>
+                  <p className="text-xs font-black">{m.emoji} {m.label}</p>
+                  <p className="text-[10px] text-zinc-400">{m.sub}</p>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h3 className="text-xs font-black uppercase text-zinc-400 mb-2">Buy AIM Packages</h3>
+            <div className="grid grid-cols-2 gap-2.5">
+              {AIM_PACKAGES.map((pkg) => (
+                <button key={pkg.id} onClick={() => onBuyPackage(pkg)} className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 hover:border-[#00FF88] p-3.5 text-left">
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00FF88]/15 text-[#00FF88]">{pkg.badge}</span>
+                  <p className="text-lg font-black mt-2">{pkg.ami.toLocaleString()} AIM</p>
+                  <p className="text-xs font-black text-[#00FF88]">${pkg.usd} / ₦{pkg.ngn.toLocaleString()}</p>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-4 space-y-3">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-xs font-black uppercase text-[#00FF88]">AIM Receiving Account</h3>
+                <p className="text-sm font-black mt-1">@vibezzzy</p>
+                <p className="text-xs font-mono text-zinc-300">VBZ-AIM-8842-1241</p>
+              </div>
+              <div className="p-2 bg-white rounded-xl grid grid-cols-5 gap-0.5 w-16 h-16">
+                {Array.from({ length: 25 }).map((_, i) => (
+                  <div key={i} className={[0,1,2,4,5,10,12,14,17,20,21,22,24,6,8,18].includes(i) ? "bg-black" : "bg-white"} />
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => { setCopied(true); onCopyWallet(); setTimeout(() => setCopied(false), 1800); }} className="flex-1 py-2 rounded-xl bg-black border border-zinc-700 text-xs font-black">
+                {copied ? "Copied ✓" : "📋 Copy Wallet ID"}
+              </button>
+              <button onClick={onShareWallet} className="flex-1 py-2 rounded-xl bg-[#00FF88] text-black text-xs font-black">↗️ Share Account</button>
+            </div>
+          </section>
+
+          <form onSubmit={onSubmitTopUp} className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-4 space-y-2.5">
+            <h3 className="text-xs font-black uppercase text-zinc-300">Top Up Form (Starts Empty)</h3>
+            {[["fullName","Full Name"],["bankName","Bank Name"],["accountNumber","Account Number"],["accountName","Account Name"],["phoneNumber","Phone Number"],["email","Email"]].map(([k, lbl]) => (
+              <input key={k} value={topUpForm[k]} onChange={(e) => onChangeForm({ ...topUpForm, [k]: e.target.value })} placeholder={lbl} className="w-full bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white" />
+            ))}
+            <button type="submit" className="w-full py-2.5 rounded-xl bg-[#00FF88] text-black text-xs font-black">Submit Top-Up (+250 AIM)</button>
+          </form>
+
+          <section className="space-y-2">
+            <h3 className="text-xs font-black uppercase text-zinc-400">Transaction History</h3>
+            {transactions.map((tx) => (
+              <div key={tx.id} className="rounded-xl bg-[#1A1A1D] border border-zinc-800 p-3 flex justify-between items-center">
+                <div className="flex gap-2.5 items-center">
+                  <span className="text-xl">{tx.emoji}</span>
+                  <div><p className="text-xs font-black">{tx.title}</p><p className="text-[10px] text-zinc-400">{tx.subtitle} • {tx.time}</p></div>
+                </div>
+                <span className={`text-xs font-black ${tx.credit ? "text-[#00FF88]" : "text-rose-400"}`}>{tx.credit ? "+" : "-"}{tx.amount} AIM</span>
+              </div>
+            ))}
+          </section>
+        </div>
+      );
+    }
+
+    function ProfileView({ profile, aimBalance, videos, onTopUp, onToggleFollow, onEditProfile, onCycleFollowerTier, onOpenVideo }) {
+      const monetized = profile.followers >= 5000;
+      return (
+        <div className="p-4 space-y-5">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#00FF88] to-emerald-600 p-0.5">
+              <div className="w-full h-full rounded-full bg-[#1A1A1D] flex items-center justify-center text-4xl">💚</div>
+            </div>
+            <h2 className="text-lg font-black mt-2.5">{profile.handle} <span className="text-[#00FF88]">✓</span></h2>
+            <p className="text-xs text-zinc-400">{profile.bio}</p>
+            <div className="grid grid-cols-3 gap-4 w-full mt-4 bg-[#1A1A1D] border border-zinc-800 rounded-2xl p-3">
+              <div><p className="text-base font-black">{formatViews(profile.followers)}</p><p className="text-[11px] text-zinc-400">Followers</p></div>
+              <div><p className="text-base font-black">{profile.following}</p><p className="text-[11px] text-zinc-400">Following</p></div>
+              <div><p className="text-base font-black">{profile.views}</p><p className="text-[11px] text-zinc-400">Views</p></div>
+            </div>
+            <div className="flex gap-2.5 w-full mt-3">
+              <button onClick={onToggleFollow} className={`flex-1 py-2.5 rounded-xl text-xs font-black ${profile.isFollowing ? "bg-[#1A1A1D] border border-zinc-700" : "bg-[#00FF88] text-black"}`}>
+                {profile.isFollowing ? "Following ✓" : "Follow"}
+              </button>
+              <button onClick={onEditProfile} className="flex-1 py-2.5 rounded-xl bg-[#1A1A1D] border border-zinc-700 text-xs font-black">Edit Profile</button>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-4 flex justify-between items-center">
+            <div><p className="text-[11px] text-zinc-400">AIM Balance</p><p className="text-xl font-black text-[#00FF88]">{aimBalance.toLocaleString()} AIM</p></div>
+            <button onClick={onTopUp} className="px-4 py-2 rounded-full bg-[#00FF88] text-black text-xs font-black">Top Up</button>
+          </div>
+
+          <div className="rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-4 space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-black uppercase text-zinc-400">Creator Earnings</span>
+              <button onClick={onCycleFollowerTier} className="text-[11px] font-bold text-[#00FF88] underline">Test &lt;5K / 12.4K</button>
+            </div>
+            {monetized ? (
+              <div>
+                <span className="px-2.5 py-0.5 rounded-full bg-[#00FF88] text-black text-[10px] font-black">MONETIZED ✓</span>
+                <p className="text-sm font-black mt-2">+$68.20 / 3,410 AIM earned from views</p>
+              </div>
+            ) : (
+              <p className="text-xs font-bold text-amber-400">Reach 5,000 followers to start earning from views ({profile.followers.toLocaleString()}/5,000)</p>
+            )}
+          </div>
+
+          <section>
+            <h3 className="text-xs font-black uppercase text-zinc-400 mb-2">30s Creator Videos (5)</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {videos.map((v) => (
+                <button key={v.id} onClick={() => onOpenVideo(v)} className={`h-36 rounded-xl bg-gradient-to-b ${v.gradient} border border-zinc-800 p-2 flex flex-col justify-between text-left`}>
+                  <span className="self-end px-1.5 py-0.5 rounded bg-black/70 text-[9px] font-black text-[#00FF88]">{v.duration}</span>
+                  <div><p className="text-[11px] font-black line-clamp-2">{v.title}</p><p className="text-[10px] text-zinc-300">👁️ {v.views}</p></div>
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    function PaystackModal({ pkg, method, onSelectMethod, onClose, onConfirm }) {
+      return (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-end sm:items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-2xl bg-[#1A1A1D] border border-[#00FF88]/50 p-5 space-y-4">
+            <div className="flex justify-between items-center">
+              <div><span className="text-[10px] font-black text-[#00FF88] uppercase">Paystack Secured</span><h3 className="text-base font-black">Pay ₦{pkg.ngn.toLocaleString()} (${pkg.usd})</h3></div>
+              <button onClick={onClose} className="w-8 h-8 rounded-full bg-black font-black">✕</button>
+            </div>
+            <p className="text-xs text-zinc-300">Crediting <strong className="text-[#00FF88]">{pkg.ami.toLocaleString()} AIM</strong> to @vibezzzy</p>
+            <div className="grid grid-cols-2 gap-2">
+              {PAYMENT_METHODS.map((m) => (
+                <button key={m.id} onClick={() => onSelectMethod(m.id)} className={`p-2.5 rounded-xl border text-xs font-black ${method === m.id ? "border-[#00FF88] bg-[#00FF88]/15 text-[#00FF88]" : "border-zinc-700 bg-black"}`}>{m.emoji} {m.label}</button>
+              ))}
+            </div>
+            <button onClick={onConfirm} className="w-full py-3 rounded-xl bg-[#00FF88] text-black font-black text-sm">Pay Now with {method}</button>
+          </div>
+        </div>
+      );
+    }
+
+    function CreatePostModal({ rooms, onClose, onSubmit }) {
+      const [roomId, setRoomId] = useState(rooms[0].id);
+      const [mediaType, setMediaType] = useState("video");
+      const [caption, setCaption] = useState("");
+      const [previewUrl, setPreviewUrl] = useState(null);
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-end sm:items-center justify-center p-4">
+          <form onSubmit={(e) => { e.preventDefault(); if (caption.trim()) onSubmit({ roomId, caption, mediaType, previewUrl }); }} className="w-full max-w-md rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-5 space-y-3">
+            <div className="flex justify-between items-center"><h3 className="text-base font-black">Create Post</h3><button type="button" onClick={onClose} className="w-8 h-8 rounded-full bg-black font-black">✕</button></div>
+            <div className="grid grid-cols-2 gap-2">
+              {[["video", "🎬 Video (Max 30s)"], ["photo", "📸 Picture"]].map(([id, lbl]) => (
+                <button type="button" key={id} onClick={() => setMediaType(id)} className={`py-2.5 rounded-xl text-xs font-black border ${mediaType === id ? "bg-[#00FF88] text-black border-[#00FF88]" : "bg-black border-zinc-700"}`}>{lbl}</button>
+              ))}
+            </div>
+            <input type="file" accept={mediaType === "video" ? "video/*" : "image/*"} onChange={(e) => { const f = e.target.files?.[0]; if (f) setPreviewUrl(URL.createObjectURL(f)); }} className="w-full text-xs text-zinc-400" />
+            <select value={roomId} onChange={(e) => setRoomId(e.target.value)} className="w-full bg-black border border-zinc-700 rounded-xl px-3 py-2.5 text-xs">
+              {rooms.map((r) => <option key={r.id} value={r.id}>{r.emoji} {r.name}</option>)}
+            </select>
+            <textarea rows={3} required value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Write your caption..." className="w-full bg-black border border-zinc-700 rounded-xl p-3 text-xs" />
+            <button type="submit" className="w-full py-3 rounded-xl bg-[#00FF88] text-black font-black text-xs">Post to Home Feed</button>
+          </form>
+        </div>
+      );
+    }
+
+    function SearchModal({ query, onChangeQuery, users, rooms, squads, onClose, onSelectRoom, onSelectSquad, onSelectUser }) {
+      const q = query.trim().toLowerCase();
+      return (
+        <div className="fixed inset-0 z-50 bg-black flex flex-col max-w-md mx-auto">
+          <div className="p-4 border-b border-zinc-900 flex gap-2">
+            <button onClick={onClose} className="w-9 h-9 rounded-full bg-[#1A1A1D] font-black">←</button>
+            <input autoFocus value={query} onChange={(e) => onChangeQuery(e.target.value)} placeholder="Search rooms, creators, squads..." className="flex-1 bg-[#1A1A1D] border border-zinc-700 rounded-full px-4 py-2 text-xs text-white" />
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div>
+              <h4 className="text-xs font-black uppercase text-zinc-400 mb-2">Live Rooms</h4>
+              <div className="space-y-2">{rooms.filter((r) => r.name.toLowerCase().includes(q)).map((r) => (
+                <button key={r.id} onClick={() => onSelectRoom(r.id)} className="w-full text-left p-3 rounded-xl bg-[#1A1A1D] flex justify-between text-xs font-black"><span>{r.emoji} {r.name}</span><span className="text-[#00FF88]">{r.display} live</span></button>
+              ))}</div>
+            </div>
+            <div>
+              <h4 className="text-xs font-black uppercase text-zinc-400 mb-2">People</h4>
+              <div className="space-y-2">{users.filter((u) => u.name.toLowerCase().includes(q) || u.handle.toLowerCase().includes(q)).map((u) => (
+                <button key={u.id} onClick={() => onSelectUser(u)} className="w-full text-left p-3 rounded-xl bg-[#1A1A1D] flex items-center gap-3"><span>{u.avatar}</span><div><p className="text-xs font-black">{u.name}</p><p className="text-[10px] text-zinc-400">{u.handle} • {u.city}</p></div></button>
+              ))}</div>
+            </div>
+            <div>
+              <h4 className="text-xs font-black uppercase text-zinc-400 mb-2">Squads</h4>
+              <div className="space-y-2">{squads.filter((s) => s.name.toLowerCase().includes(q)).map((s) => (
+                <button key={s.id} onClick={() => onSelectSquad(s.id)} className="w-full text-left p-3 rounded-xl bg-[#1A1A1D] flex justify-between text-xs font-black"><span>{s.emoji} {s.name}</span><span className="text-zinc-400">{s.members} members</span></button>
+              ))}</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function NotificationsModal({ notifications, onClose, onMarkAll, onClickItem }) {
+      return (
+        <div className="fixed inset-0 z-50 bg-black flex flex-col max-w-md mx-auto">
+          <div className="p-4 border-b border-zinc-900 flex justify-between items-center">
+            <div className="flex items-center gap-2"><button onClick={onClose} className="w-9 h-9 rounded-full bg-[#1A1A1D] font-black">←</button><h3 className="text-base font-black">Notifications</h3></div>
+            <button onClick={onMarkAll} className="text-xs font-black text-[#00FF88]">Mark all read</button>
+          </div>
+          <div className="p-4 space-y-2.5 overflow-y-auto">
+            {notifications.map((n) => (
+              <button key={n.id} onClick={() => onClickItem(n)} className={`w-full text-left p-3.5 rounded-2xl border flex gap-3 ${n.unread ? "bg-[#0B3522]/40 border-[#00FF88]/50" : "bg-[#1A1A1D] border-zinc-800"}`}>
+                <span className="text-xl">{n.emoji}</span>
+                <div><p className="text-xs font-black">{n.title}</p><p className="text-[11px] text-zinc-300">{n.body}</p><span className="text-[10px] text-zinc-500">{n.time}</span></div>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function StoryModal({ story, onClose, onJumpRoom, onReply }) {
+      const [reply, setReply] = useState("");
+      return (
+        <div className="fixed inset-0 z-50 bg-black flex flex-col justify-between p-5 max-w-md mx-auto">
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2.5 items-center"><span className="text-2xl">{story.avatar}</span><div><p className="text-sm font-black">{story.handle}</p><p className="text-[11px] text-zinc-400">{story.timeAgo}</p></div></div>
+            <button onClick={onClose} className="w-9 h-9 rounded-full bg-[#1A1A1D] font-black">✕</button>
+          </div>
+          <div className="rounded-3xl bg-gradient-to-br from-[#0B3522] to-[#1A1A1D] border border-[#00FF88]/40 p-6 text-center space-y-3">
+            <span className="px-3 py-1 rounded-full bg-[#00FF88] text-black text-[10px] font-black">{story.roomName}</span>
+            <h3 className="text-xl font-black">{story.headline}</h3>
+            <p className="text-sm text-zinc-200">{story.body}</p>
+            <button onClick={() => onJumpRoom(story.roomId)} className="px-5 py-2.5 rounded-full bg-[#00FF88] text-black text-xs font-black">Jump into {story.roomName} →</button>
+          </div>
+          <form onSubmit={(e) => { e.preventDefault(); if (reply.trim()) onReply(reply.trim()); }} className="flex gap-2">
+            <input value={reply} onChange={(e) => setReply(e.target.value)} placeholder={`Reply to ${story.handle}...`} className="flex-1 bg-[#1A1A1D] border border-zinc-700 rounded-full px-4 py-2.5 text-xs" />
+            <button type="submit" className="px-4 py-2.5 rounded-full bg-[#00FF88] text-black font-black text-xs">Send</button>
+          </form>
+        </div>
+      );
+    }
+
+    function VideoModal({ video, onClose, onLike }) {
+      return (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
+          <div className="w-full max-w-sm rounded-3xl bg-[#1A1A1D] border border-zinc-800 overflow-hidden">
+            <div className={`h-72 bg-gradient-to-b ${video.gradient} p-5 flex flex-col justify-between`}>
+              <div className="flex justify-between items-center">
+                <span className="px-2.5 py-1 rounded-full bg-[#00FF88] text-black text-[10px] font-black">{video.duration} • {video.room}</span>
+                <button onClick={onClose} className="w-8 h-8 rounded-full bg-black/70 font-black">✕</button>
+              </div>
+              <div className="text-center"><div className="text-4xl mb-2">▶️</div><h4 className="text-base font-black">{video.title}</h4><p className="text-xs text-zinc-300">👁️ {video.views}</p></div>
+              <div />
+            </div>
+            <div className="p-4 flex justify-between items-center">
+              <button onClick={onLike} className="text-xs font-black text-[#00FF88]">💚 {video.likes.toLocaleString()} Likes</button>
+              <button onClick={onClose} className="text-xs font-bold text-zinc-400">Close</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function CommentsModal({ post, onClose, onAdd }) {
+      const [txt, setTxt] = useState("");
+      if (!post) return null;
+      return (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-end justify-center">
+          <div className="w-full max-w-md rounded-t-3xl bg-[#1A1A1D] border-t border-zinc-800 p-4 space-y-3">
+            <div className="flex justify-between items-center"><h4 className="text-sm font-black">Comments ({post.comments.length})</h4><button onClick={onClose} className="w-8 h-8 rounded-full bg-black font-black">✕</button></div>
+            <div className="max-h-56 overflow-y-auto space-y-2">
+              {post.comments.map((c) => <div key={c.id} className="bg-black/60 rounded-xl p-2.5 text-xs"><strong className="text-[#00FF88]">{c.avatar} {c.handle}</strong> {c.text}</div>)}
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); onAdd(txt); setTxt(""); }} className="flex gap-2">
+              <input value={txt} onChange={(e) => setTxt(e.target.value)} placeholder="Add comment..." className="flex-1 bg-black border border-zinc-700 rounded-full px-4 py-2 text-xs" />
+              <button type="submit" className="px-4 py-2 rounded-full bg-[#00FF88] text-black text-xs font-black">Post</button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    function WithdrawModal({ balance, onClose, onConfirm }) {
+      const [amt, setAmt] = useState("200");
+      const [bank, setBank] = useState("Opay");
+      return (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+          <form onSubmit={(e) => { e.preventDefault(); onConfirm(Number(amt), bank); }} className="w-full max-w-sm rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-5 space-y-3">
+            <div className="flex justify-between items-center"><h3 className="text-base font-black">Withdraw AIM</h3><button type="button" onClick={onClose}>✕</button></div>
+            <p className="text-xs text-zinc-400">Available: {balance.toLocaleString()} AIM</p>
+            <input type="number" value={amt} onChange={(e) => setAmt(e.target.value)} className="w-full bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs" />
+            <input value={bank} onChange={(e) => setBank(e.target.value)} className="w-full bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs" />
+            <button type="submit" className="w-full py-2.5 rounded-xl bg-[#00FF88] text-black text-xs font-black">Confirm Withdrawal</button>
+          </form>
+        </div>
+      );
+    }
+
+    function EditProfileModal({ profile, onClose, onSave }) {
+      const [handle, setHandle] = useState(profile.handle);
+      const [bio, setBio] = useState(profile.bio);
+      return (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+          <form onSubmit={(e) => { e.preventDefault(); onSave({ handle, bio }); }} className="w-full max-w-sm rounded-2xl bg-[#1A1A1D] border border-zinc-800 p-5 space-y-3">
+            <div className="flex justify-between items-center"><h3 className="text-base font-black">Edit Profile</h3><button type="button" onClick={onClose}>✕</button></div>
+            <input value={handle} onChange={(e) => setHandle(e.target.value)} className="w-full bg-black border border-zinc-700 rounded-xl px-3 py-2 text-xs" />
+            <textarea rows={3} value={bio} onChange={(e) => setBio(e.target.value)} className="w-full bg-black border border-zinc-700 rounded-xl p-3 text-xs" />
+            <button type="submit" className="w-full py-2.5 rounded-xl bg-[#00FF88] text-black text-xs font-black">Save Changes</button>
+          </form>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
 </body>
 </html>
